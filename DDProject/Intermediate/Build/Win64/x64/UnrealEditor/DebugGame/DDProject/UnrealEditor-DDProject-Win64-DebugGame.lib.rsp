@@ -1,0 +1,17 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-DDProject-Win64-DebugGame.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"E:\Git\DDProject\DDProject\DDProject\Intermediate\Build\Win64\x64\DDProjectEditor\DebugGame\UnrealEd\SharedPCH.UnrealEd.Project.NonOptimized.ValApi.Cpp20.h.obj"
+"E:\Git\DDProject\DDProject\DDProject\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\DDProject\DDProject.init.gen.cpp.obj"
+"E:\Git\DDProject\DDProject\DDProject\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\DDProject\TP_ThirdPersonCharacter.gen.cpp.obj"
+"E:\Git\DDProject\DDProject\DDProject\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\DDProject\TP_ThirdPersonGameMode.gen.cpp.obj"
+"E:\Git\DDProject\DDProject\DDProject\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\DDProject\DDProject.cpp.obj"
+"E:\Git\DDProject\DDProject\DDProject\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\DDProject\TP_ThirdPersonCharacter.cpp.obj"
+"E:\Git\DDProject\DDProject\DDProject\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\DDProject\TP_ThirdPersonGameMode.cpp.obj"
+"E:\Git\DDProject\DDProject\DDProject\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\DDProject\Default.rc2.res"
+/OUT:"E:\Git\DDProject\DDProject\DDProject\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\DDProject\UnrealEditor-DDProject-Win64-DebugGame.lib"

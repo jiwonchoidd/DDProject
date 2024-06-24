@@ -1,0 +1,12 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-DDFundamental.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"E:\Git\DDProject\DDProject\DDProject\Intermediate\Build\Win64\x64\DDProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"E:\Git\DDProject\DDProject\DDProject\Plugins\DDFundamental\Intermediate\Build\Win64\x64\UnrealEditor\Development\DDFundamental\DDFundamental.cpp.obj"
+"E:\Git\DDProject\DDProject\DDProject\Plugins\DDFundamental\Intermediate\Build\Win64\x64\UnrealEditor\Development\DDFundamental\Default.rc2.res"
+/OUT:"E:\Git\DDProject\DDProject\DDProject\Plugins\DDFundamental\Intermediate\Build\Win64\x64\UnrealEditor\Development\DDFundamental\UnrealEditor-DDFundamental.lib"
