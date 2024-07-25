@@ -1,9 +1,0 @@
-{
-	"SourceFiles": [
-		"E:\\Git\\DDProject\\DDProject\\DDProject\\Source\\DDProject\\DDProject.Build.cs",
-		"E:\\Git\\DDProject\\DDProject\\DDProject\\Plugins\\DDFundamental\\Source\\DDFundamental\\DDFundamental.Build.cs",
-		"E:\\Git\\DDProject\\DDProject\\DDProject\\Source\\DDProject.Target.cs",
-		"E:\\Git\\DDProject\\DDProject\\DDProject\\Source\\DDProjectEditor.Target.cs"
-	],
-	"EngineVersion": "5.4.2"
-}
