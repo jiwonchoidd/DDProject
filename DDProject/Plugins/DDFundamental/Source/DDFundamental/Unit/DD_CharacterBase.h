@@ -22,12 +22,4 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-private:
-	void Equip(const FInputActionValue& _Value);
-private:
-	UPROPERTY(EditAnywhere, Category="DD_Input", meta=(AllowPrivateAccess))
-	class UInputMappingContext* MappingContext;
-	UPROPERTY(EditAnywhere, Category="DD_Input", meta=(AllowPrivateAccess))
-	TArray<class UInputAction*> InputActions;
 };

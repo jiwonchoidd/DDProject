@@ -3,6 +3,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputTriggers.h"
+#include "DDFundamental/Gameplay/DDPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -14,14 +15,6 @@ ADD_CharacterBase::ADD_CharacterBase()
 void ADD_CharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (const APlayerController* PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			SubSystem->AddMappingContext(MappingContext, 0);
-		}
-	}
 }
 
 void ADD_CharacterBase::Tick(float DeltaTime)
@@ -33,21 +26,10 @@ void ADD_CharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	if (const ADDPlayerController* PlayerController = Cast<ADDPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
 	{
-		for(const UInputAction* InputAction : InputActions)
-		{
-			if(InputAction == nullptr)
-				continue;
-
-			EnhancedInputComponent->BindActionValue(InputAction);
-			EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &ThisClass::Equip);
-		}
+		PlayerController->BindingInputAction(PlayerInputComponent);
 	}
 }
 
-void ADD_CharacterBase::Equip(const FInputActionValue& _Value)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, FString::Printf(TEXT("Input %s"), *_Value.ToString()));
-}
 
