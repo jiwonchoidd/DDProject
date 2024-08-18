@@ -4,6 +4,7 @@
 #include "DDSceneManager.h"
 
 #include "DDFundamental/Gameplay/DDState.h"
+#include "Scene/DDLobby.h"
 
 void UDDSceneManager::Initialize()
 {
@@ -13,6 +14,8 @@ void UDDSceneManager::Initialize()
 		SceneState->AddToRoot();
 		SceneState->Create();
 	}
+
+	SceneState->RegistState<EDDSceneState>(EDDSceneState::Lobby, UDDLobby::StaticClass(), this);
 }
 
 void UDDSceneManager::Finalize()
@@ -30,6 +33,10 @@ void UDDSceneManager::Tick(float _DeltaTime)
 	
 }
 
-void UDDSceneManager::OnChangeLevel()
+void UDDSceneManager::ChangeLevel(EDDSceneState _SceneState) const
 {
+	if(SceneState)
+	{
+		SceneState->SetState(static_cast<uint8>(_SceneState));
+	}
 }

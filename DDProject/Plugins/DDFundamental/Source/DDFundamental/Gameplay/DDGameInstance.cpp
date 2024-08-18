@@ -3,6 +3,7 @@
 
 #include "DDGameInstance.h"
 
+#include "DDFundamental/Manager/DDSceneManager.h"
 #include "Windows/WindowsPlatformApplicationMisc.h"
 
 void UDDGameInstance::Init()
@@ -18,9 +19,24 @@ void UDDGameInstance::Init()
 #else
 	Device = EDDDevice::EOS;
 #endif
+
+	Singletons.Reset();
+	Singletons.Emplace(UDDSceneManager::MakeInstance());
+	for(ISingleton* Singleton : Singletons)
+	{
+		Singleton->Initialize();
+	}
 }
 
 void UDDGameInstance::Shutdown()
 {
+	for(ISingleton* Singleton : Singletons)
+	{
+		Singleton->Finalize();
+		Singleton = nullptr;
+	}
+	UDDSceneManager::RemoveInstance();
+	Singletons.Reset();
+	
 	Super::Shutdown();
 }

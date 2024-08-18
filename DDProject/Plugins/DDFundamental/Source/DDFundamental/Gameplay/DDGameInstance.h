@@ -25,6 +25,8 @@ class DDFUNDAMENTAL_API UDDGameInstance : public UGameInstance
 protected:
 	virtual void Init() override;
 	virtual void Shutdown() override;
+
 private:
 	EDDDevice Device = EDDDevice::NONE;
+	TArray<class ISingleton*> Singletons;
 };

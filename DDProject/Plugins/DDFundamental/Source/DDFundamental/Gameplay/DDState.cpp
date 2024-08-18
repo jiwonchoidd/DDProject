@@ -8,10 +8,11 @@ void UDDState::Create()
 
 void UDDState::Destroy()
 {
-	for (TTuple<uint8, UDDStateBase*> State : mapState)
+	for (TTuple<uint8, UDDStateBase*>& State : mapState)
 	{
 		if (!IsValid(State.Value))
 			continue;
+		
 		State.Value->RemoveFromRoot();
 		State.Value->Finalize();
 		State.Value = nullptr;
@@ -30,27 +31,18 @@ void UDDState::Tick(float _fDeltaTime)
 	}
 }
 
-void UDDState::RegistState(uint8 _nIndex,
-                           TSubclassOf<UDDStateBase> _SceneType, UObject* _pOuter)
+template <typename TEnum>
+void UDDState::RegistState(TEnum _Enum, TSubclassOf<UDDStateBase> _SceneType, UObject* _pOuter)
 {
-	if (mapState.Contains(_nIndex))
+	if (mapState.Contains(_Enum))
 		return;
 
 	UObject* ParentObject = IsValid(_pOuter) ? _pOuter : nullptr;
 	UDDStateBase* StateBase = NewObject<UDDStateBase>(ParentObject, _SceneType);
 
-	StateBase->Initialize(_nIndex);
+	StateBase->Initialize(_Enum);
 
-	mapState.Add(_nIndex, StateBase);
-}
-
-void UDDState::UnRegistState()
-{
-	for (const auto State : mapState)
-	{
-		State.Value->Finalize();
-	}
-	mapState.Reset();
+	mapState.Add(_Enum, StateBase);
 }
 
 void UDDState::SetState(uint8 _uiIndex, bool _bInstant)

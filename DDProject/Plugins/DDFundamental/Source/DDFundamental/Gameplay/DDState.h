@@ -13,9 +13,8 @@ public:
 	void Destroy();
 	void Tick(float _fDeltaTime);
 
-	void RegistState(uint8 _nIndex, TSubclassOf<class UDDStateBase> _SceneType, UObject* _pOuter = nullptr);
-	void UnRegistState();
-
+	template<typename TEnum>
+	void RegistState(TEnum _Enum, TSubclassOf<class UDDStateBase> _SceneType, UObject* _pOuter = nullptr);
 	void SetState(uint8 _uiIndex, bool _bInstant = true);
 
 	FORCEINLINE uint8 GetPreviousStateID() const { return PreviousStateID; }
@@ -37,8 +36,24 @@ private:
 };
 
 
+UINTERFACE(MinimalAPI)
+class UStateBaseInterface : public UInterface
+{
+	GENERATED_BODY()
+};
+
+class DDFUNDAMENTAL_API IStateBaseInterface
+{
+	GENERATED_BODY()
+
+public:
+	virtual void Begin() = 0;
+	virtual void Tick(float _fDeltaTime) = 0;
+	virtual void Exit() = 0;
+};
+
 UCLASS()
-class DDFUNDAMENTAL_API UDDStateBase : public UObject
+class DDFUNDAMENTAL_API UDDStateBase : public UObject, public IStateBaseInterface
 {
 	GENERATED_BODY()
 
@@ -54,9 +69,9 @@ public:
 	void OnExitState();
 
 protected:
-	virtual void Begin(){}
-	virtual void Tick(float _fDeltaTime){}
-	virtual void Exit(){}
+	virtual void Begin() override {}
+	virtual void Tick(float _fDeltaTime) override {}
+	virtual void Exit() override {}
 
 public:
 	FORCEINLINE uint8 GetStateIndex() const { return StateIndex; }

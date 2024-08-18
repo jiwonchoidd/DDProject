@@ -10,18 +10,28 @@
 /**
  * 
  */
+UENUM()
+enum class EDDSceneState : uint8
+{
+	None,
+	Logo,
+	Login,
+	Lobby,
+	Max = 0xff
+};
+
 UCLASS()
 class DDFUNDAMENTAL_API UDDSceneManager : public UObject, public DDSingleton<UDDSceneManager>
 {
 	GENERATED_BODY()
 
-public: 
+protected: 
 	virtual void Initialize() override;
 	virtual void Finalize() override;
 
 	virtual void Tick(float _DeltaTime) override;
 public:
-	void OnChangeLevel();
+	void ChangeLevel(EDDSceneState _SceneState) const;
 
 private:
 	UPROPERTY()
