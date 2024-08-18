@@ -14,7 +14,7 @@ public:
 	void Tick(float _fDeltaTime);
 
 	template<typename TEnum>
-	void RegistState(TEnum _Enum, TSubclassOf<class UDDStateBase> _SceneType, UObject* _pOuter = nullptr);
+	void AddState(TEnum _Enum, TSubclassOf<class UDDStateBase> _SceneType, UObject* _pOuter = nullptr);
 	void SetState(uint8 _uiIndex, bool _bInstant = true);
 
 	FORCEINLINE uint8 GetPreviousStateID() const { return PreviousStateID; }

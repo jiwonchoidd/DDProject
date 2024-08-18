@@ -32,7 +32,7 @@ void UDDState::Tick(float _fDeltaTime)
 }
 
 template <typename TEnum>
-void UDDState::RegistState(TEnum _Enum, TSubclassOf<UDDStateBase> _SceneType, UObject* _pOuter)
+void UDDState::AddState(TEnum _Enum, TSubclassOf<UDDStateBase> _SceneType, UObject* _pOuter)
 {
 	if (mapState.Contains(_Enum))
 		return;

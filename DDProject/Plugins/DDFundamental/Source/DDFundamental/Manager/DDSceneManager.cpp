@@ -15,7 +15,7 @@ void UDDSceneManager::Initialize()
 		SceneState->Create();
 	}
 
-	SceneState->RegistState<EDDSceneState>(EDDSceneState::Lobby, UDDLobby::StaticClass(), this);
+	SceneState->AddState<EDDSceneState>(EDDSceneState::Lobby, UDDLobby::StaticClass(), this);
 }
 
 void UDDSceneManager::Finalize()
