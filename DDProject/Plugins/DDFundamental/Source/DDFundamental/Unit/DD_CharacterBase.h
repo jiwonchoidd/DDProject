@@ -11,15 +11,9 @@ UCLASS()
 class DDFUNDAMENTAL_API ADD_CharacterBase : public ACharacter
 {
 	GENERATED_BODY()
-
 public:
 	ADD_CharacterBase();
-
-protected:
-	virtual void BeginPlay() override;
-
-public:
-	virtual void Tick(float DeltaTime) override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* BaseCamera = nullptr;
 };

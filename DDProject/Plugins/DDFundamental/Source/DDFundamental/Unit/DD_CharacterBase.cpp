@@ -1,35 +1,20 @@
 ﻿#include "DD_CharacterBase.h"
-
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
-#include "InputTriggers.h"
-#include "DDFundamental/Gameplay/DDPlayerController.h"
-#include "Kismet/GameplayStatics.h"
-
+#include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ADD_CharacterBase::ADD_CharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	GetCharacterMovement()->JumpZVelocity = 700.f;
+	GetCharacterMovement()->AirControl = 0.35f;
+	GetCharacterMovement()->MaxWalkSpeed = 500.f;
+	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
+	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
+	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
+
+	BaseCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	BaseCamera->SetupAttachment(RootComponent, NAME_None);
+	BaseCamera->bUsePawnControlRotation = true;
+	BaseCamera->SetFieldOfView(90.f);
 }
-
-void ADD_CharacterBase::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void ADD_CharacterBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-void ADD_CharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	if (const ADDPlayerController* PlayerController = Cast<ADDPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
-	{
-		PlayerController->BindingInputAction(PlayerInputComponent);
-	}
-}
-
-

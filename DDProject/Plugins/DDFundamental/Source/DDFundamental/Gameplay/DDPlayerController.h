@@ -14,14 +14,21 @@ class DDFUNDAMENTAL_API ADDPlayerController : public APlayerController
 
 public:
 	ADDPlayerController();
-private:
+protected:
 	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
 
 public:
-	void BindingInputAction(UInputComponent* _InputComponent) const;
+	UFUNCTION() virtual void BaseMove(const FInputActionValue& _Value);
+	UFUNCTION() virtual void BaseLook(const FInputActionValue& _Value);
+	UFUNCTION() virtual void BaseJump(const FInputActionValue& _Value);
 private:
 	UPROPERTY()
 	class UInputMappingContext* MappingContext = nullptr;
 	UPROPERTY()
-	TArray<class UInputAction*> InputActions;
+	class UInputAction* InputMove = nullptr;
+	UPROPERTY()
+	class UInputAction* InputLook = nullptr;
+	UPROPERTY()
+	class UInputAction* InputJump = nullptr;
 };
