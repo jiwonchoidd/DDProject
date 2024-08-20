@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class DDFUNDAMENTAL_API UDDLobby : public UDDStateBase
+class DDFUNDAMENTAL_API UDDLobby : public UDDBaseState
 {
 	GENERATED_BODY()
 

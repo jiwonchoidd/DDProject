@@ -5,15 +5,12 @@
 
 void UDDLobby::Begin()
 {
-	Super::Begin();
 }
 
 void UDDLobby::Tick(float _fDeltaTime)
 {
-	Super::Tick(_fDeltaTime);
 }
 
 void UDDLobby::Exit()
 {
-	Super::Exit();
 }
