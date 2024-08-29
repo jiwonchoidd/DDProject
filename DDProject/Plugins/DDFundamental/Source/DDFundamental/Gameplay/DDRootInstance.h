@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "DDGameInstance.generated.h"
+#include "DDRootInstance.generated.h"
 
 /**
  * 
@@ -18,15 +18,17 @@ enum class EDDDevice : uint8
 };
 
 UCLASS()
-class DDFUNDAMENTAL_API UDDGameInstance : public UGameInstance
+class DDFUNDAMENTAL_API UDDRootInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
 protected:
 	virtual void Init() override;
 	virtual void Shutdown() override;
-
+private:
+	virtual void InitSingletons();
+protected:
+	TArray<class ISingleton*> Singletons;
 private:
 	EDDDevice Device = EDDDevice::NONE;
-	TArray<class ISingleton*> Singletons;
 };

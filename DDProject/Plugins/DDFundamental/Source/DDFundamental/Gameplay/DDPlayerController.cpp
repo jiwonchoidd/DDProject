@@ -4,7 +4,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
 #include "GameFramework/Character.h"
-#include "GameFramework/PawnMovementComponent.h"
 
 ADDPlayerController::ADDPlayerController()
 {
