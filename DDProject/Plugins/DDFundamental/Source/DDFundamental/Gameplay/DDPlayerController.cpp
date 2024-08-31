@@ -39,7 +39,7 @@ ADDPlayerController::ADDPlayerController()
 void ADDPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	if (UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		SubSystem->AddMappingContext(MappingContext, 0);
@@ -74,7 +74,7 @@ void ADDPlayerController::BaseMove(const FInputActionValue& _Value)
 
 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
+	
 	OwnerPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
 	OwnerPawn->AddMovementInput(RightDirection, MovementVector.X);
 }

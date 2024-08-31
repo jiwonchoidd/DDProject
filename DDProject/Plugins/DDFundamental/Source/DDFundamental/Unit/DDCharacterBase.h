@@ -12,6 +12,8 @@ class DDFUNDAMENTAL_API ADDCharacterBase : public ACharacter
 	GENERATED_BODY()
 public:
 	ADDCharacterBase();
+protected:
+	virtual void BeginPlay() override;
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent>		BaseCamera = nullptr;
