@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "DD_AnimInstance.generated.h"
+#include "DDAnimInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DDFUNDAMENTAL_API UDD_AnimInstance : public UAnimInstance
+class DDFUNDAMENTAL_API UDDAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 };

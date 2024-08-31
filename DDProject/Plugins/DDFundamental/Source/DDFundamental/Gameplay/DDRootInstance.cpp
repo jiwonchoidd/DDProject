@@ -37,7 +37,9 @@ void UDDRootInstance::Shutdown()
 		Singleton->Finalize();
 		Singleton = nullptr;
 	}
-	UDDSceneManager::RemoveInstance();
+	
+	ShutdownSingletons();
+
 	Singletons.Reset();
 	
 	Super::Shutdown();
@@ -46,4 +48,9 @@ void UDDRootInstance::Shutdown()
 void UDDRootInstance::InitSingletons()
 {
 	Singletons.Emplace(UDDSceneManager::MakeInstance());
+}
+
+void UDDRootInstance::ShutdownSingletons()
+{
+	UDDSceneManager::RemoveInstance();
 }

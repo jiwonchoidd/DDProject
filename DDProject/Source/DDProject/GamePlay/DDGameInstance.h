@@ -16,4 +16,5 @@ class DDPROJECT_API UDDGameInstance : public UDDRootInstance
 
 private:
 	virtual void InitSingletons() override;
+	virtual void ShutdownSingletons() override;
 };

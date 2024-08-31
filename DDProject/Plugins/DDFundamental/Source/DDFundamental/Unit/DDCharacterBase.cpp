@@ -1,20 +1,27 @@
-﻿#include "DD_CharacterBase.h"
+﻿#include "DDCharacterBase.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
-ADD_CharacterBase::ADD_CharacterBase()
+ADDCharacterBase::ADDCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	GetCharacterMovement()->JumpZVelocity = 700.f;
+	GetCharacterMovement()->JumpZVelocity = 400.f;
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
+	//Camera
+	SpringArm_Cam = CreateDefaultSubobject<USpringArmComponent>(TEXT("SA_Cam"));
+	SpringArm_Cam->SetupAttachment(RootComponent, NAME_None);
+	SpringArm_Cam->TargetArmLength = 0.f;
+
 	BaseCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	BaseCamera->SetupAttachment(RootComponent, NAME_None);
+	BaseCamera->SetupAttachment(SpringArm_Cam, NAME_None);
+
 	BaseCamera->bUsePawnControlRotation = true;
 	BaseCamera->SetFieldOfView(90.f);
 }

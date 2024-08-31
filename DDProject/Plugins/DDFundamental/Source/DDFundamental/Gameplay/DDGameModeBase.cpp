@@ -1,14 +1,14 @@
 ﻿#include "DDGameModeBase.h"
 
 #include "DDPlayerController.h"
-#include "DDFundamental/Unit/DD_CharacterBase.h"
+#include "DDFundamental/Unit/DDCharacterBase.h"
 
 // Sets default values
 ADDGameModeBase::ADDGameModeBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	DefaultPawnClass = ADD_CharacterBase::StaticClass();
+	DefaultPawnClass = ADDCharacterBase::StaticClass();
 	PlayerControllerClass = ADDPlayerController::StaticClass();
 } 
 

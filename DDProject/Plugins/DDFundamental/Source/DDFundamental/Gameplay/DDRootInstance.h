@@ -21,13 +21,13 @@ UCLASS()
 class DDFUNDAMENTAL_API UDDRootInstance : public UGameInstance
 {
 	GENERATED_BODY()
-	
-protected:
+
+private:
 	virtual void Init() override;
 	virtual void Shutdown() override;
-private:
-	virtual void InitSingletons();
 protected:
+	virtual void InitSingletons();
+	virtual void ShutdownSingletons();
 	TArray<class ISingleton*> Singletons;
 private:
 	EDDDevice Device = EDDDevice::NONE;
