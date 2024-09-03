@@ -14,6 +14,10 @@ public:
 	ADDCharacterBase();
 protected:
 	virtual void BeginPlay() override;
+public:
+	void TryAttack();
+	void TryAiming() const;
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent>		BaseCamera = nullptr;

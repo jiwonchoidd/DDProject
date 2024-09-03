@@ -3,6 +3,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "DDFundamental/Unit/DDCharacterBase.h"
 #include "GameFramework/Character.h"
 
 ADDPlayerController::ADDPlayerController()
@@ -34,6 +35,20 @@ ADDPlayerController::ADDPlayerController()
 	{
 		InputJump = JumpIAFinder.Object;
 	}
+
+	IAPath = TEXT("/Script/EnhancedInput.InputAction'/DDFundamental/Control/IA_Aiming.IA_Aiming'";
+	static ConstructorHelpers::FObjectFinder<UInputAction> AimIAFinder(*IAPath));
+	if (AimIAFinder.Succeeded())
+	{
+		InputAiming = AimIAFinder.Object;
+	}
+
+	IAPath = TEXT("/Script/EnhancedInput.InputAction'/DDFundamental/Control/IA_Attack.IA_Attack'";
+	static ConstructorHelpers::FObjectFinder<UInputAction> AttackIAFinder(*IAPath));
+	if (AttackIAFinder.Succeeded())
+	{
+		InputAttack = AttackIAFinder.Object;
+	}
 }
 
 void ADDPlayerController::BeginPlay()
@@ -58,6 +73,11 @@ void ADDPlayerController::SetupInputComponent()
 										   &ThisClass::BaseLook);
 		EnhancedInputComponent->BindAction(InputJump, ETriggerEvent::Triggered, this,
 										   &ThisClass::BaseJump);
+
+		EnhancedInputComponent->BindAction(InputAiming, ETriggerEvent::Triggered, this,
+										   &ThisClass::BaseAiming);
+		EnhancedInputComponent->BindAction(InputAttack, ETriggerEvent::Triggered, this,
+										   &ThisClass::BaseAttack);
 	}
 }
 
@@ -102,4 +122,24 @@ void ADDPlayerController::BaseJump(const FInputActionValue& _Value)
 		return;
 
 	OwnerPawn->Jump();
+}
+
+void ADDPlayerController::BaseAiming(const FInputActionValue& _Value)
+{
+	ADDCharacterBase* BaseChar = Cast<ADDCharacterBase>(GetCharacter());
+
+	if(!IsValid(BaseChar))
+		return;
+
+	BaseChar->TryAiming();
+}
+
+void ADDPlayerController::BaseAttack(const FInputActionValue& _Value)
+{
+	ADDCharacterBase* BaseChar = Cast<ADDCharacterBase>(GetCharacter());
+
+	if(!IsValid(BaseChar))
+		return;
+
+	BaseChar->TryAttack();
 }

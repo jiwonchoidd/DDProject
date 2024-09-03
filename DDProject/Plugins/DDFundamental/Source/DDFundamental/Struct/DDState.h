@@ -1,5 +1,5 @@
 #pragma once
-#include "DDBaseState.h"
+#include "DDFundamental/Struct/DDBaseState.h"
 #include "DDState.generated.h"
 /**
  * 

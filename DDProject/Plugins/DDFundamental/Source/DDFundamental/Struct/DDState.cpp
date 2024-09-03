@@ -1,6 +1,4 @@
 #include "DDState.h"
-
-#include "DDBaseState.h"
 #include "Templates/SubclassOf.h"
 
 void UDDState::Create()

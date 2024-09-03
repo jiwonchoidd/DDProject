@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DDFundamental/Gameplay/DDState.h"
-#include "DDLobby.generated.h"
+#include "DDFundamental/Struct/DDBaseState.h"
+#include "DDLobbyState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DDFUNDAMENTAL_API UDDLobby : public UDDBaseState
+class DDFUNDAMENTAL_API UDDLobbyState : public UDDBaseState
 {
 	GENERATED_BODY()
 

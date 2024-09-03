@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DDFundamental/Manager/DDSingleton.h"
+#include "DDFundamental/Struct/DDSingleton.h"
 #include "UObject/Object.h"
 #include "DDNetworkManager.generated.h"
 

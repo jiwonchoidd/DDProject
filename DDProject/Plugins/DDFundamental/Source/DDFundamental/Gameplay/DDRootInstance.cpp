@@ -3,13 +3,19 @@
 
 #include "DDRootInstance.h"
 
-#include "DDFundamental/Manager/DDSceneManager.h"
+#include "DDFundamental/Manangers/DDLoadManager.h"
+#include "DDFundamental/Manangers/DDSceneManager.h"
+#include "DDFundamental/Manangers/DDUnitManager.h"
 #include "Windows/WindowsPlatformApplicationMisc.h"
+
+UDDRootInstance* UDDRootInstance::RootInstance = nullptr;
 
 void UDDRootInstance::Init()
 {
 	Super::Init();
 
+	RootInstance = this;
+	
 #if defined(ANDROID_PLATFORM)
 	Device = EDDDevice::AOS;
 	FPlatformApplicationMisc::ControlScreensaver(FGenericPlatformApplicationMisc::EScreenSaverAction::Disable);
@@ -41,16 +47,21 @@ void UDDRootInstance::Shutdown()
 	ShutdownSingletons();
 
 	Singletons.Reset();
-	
+
+	RootInstance = nullptr;
 	Super::Shutdown();
 }
 
 void UDDRootInstance::InitSingletons()
 {
+	Singletons.Emplace(UDDLoadManager::MakeInstance());
+	Singletons.Emplace(UDDUnitManager::MakeInstance());
 	Singletons.Emplace(UDDSceneManager::MakeInstance());
 }
 
 void UDDRootInstance::ShutdownSingletons()
 {
 	UDDSceneManager::RemoveInstance();
+	UDDUnitManager::RemoveInstance();
+	UDDLoadManager::RemoveInstance();
 }

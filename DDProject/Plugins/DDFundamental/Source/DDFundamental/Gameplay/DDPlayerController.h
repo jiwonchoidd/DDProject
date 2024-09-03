@@ -22,6 +22,8 @@ public:
 	UFUNCTION() virtual void BaseMove(const FInputActionValue& _Value);
 	UFUNCTION() virtual void BaseLook(const FInputActionValue& _Value);
 	UFUNCTION() virtual void BaseJump(const FInputActionValue& _Value);
+	UFUNCTION() virtual void BaseAiming(const FInputActionValue& _Value);
+	UFUNCTION() virtual void BaseAttack(const FInputActionValue& _Value);
 private:
 	UPROPERTY()
 	class UInputMappingContext* MappingContext = nullptr;
@@ -31,4 +33,8 @@ private:
 	class UInputAction* InputLook = nullptr;
 	UPROPERTY()
 	class UInputAction* InputJump = nullptr;
+	UPROPERTY()
+	class UInputAction* InputAiming = nullptr;
+	UPROPERTY()
+	class UInputAction* InputAttack = nullptr;
 };

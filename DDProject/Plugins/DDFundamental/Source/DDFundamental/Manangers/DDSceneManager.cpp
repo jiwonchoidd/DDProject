@@ -3,8 +3,8 @@
 
 #include "DDSceneManager.h"
 
-#include "DDFundamental/Gameplay/DDState.h"
-#include "Scene/DDLobby.h"
+#include "DDFundamental/Scene/DDLobbyState.h"
+#include "DDFundamental/Struct/DDState.h"
 
 void UDDSceneManager::Initialize()
 {
@@ -15,7 +15,7 @@ void UDDSceneManager::Initialize()
 		SceneState->Create();
 	}
 
-	SceneState->AddState(EDDSceneState::Lobby, UDDLobby::StaticClass(), this);
+	SceneState->AddState(EDDSceneState::Lobby, UDDLobbyState::StaticClass(), this);
 }
 
 void UDDSceneManager::Finalize()

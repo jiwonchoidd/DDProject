@@ -21,7 +21,8 @@ UCLASS()
 class DDFUNDAMENTAL_API UDDRootInstance : public UGameInstance
 {
 	GENERATED_BODY()
-
+public:
+	static UDDRootInstance* RootInstance;
 private:
 	virtual void Init() override;
 	virtual void Shutdown() override;

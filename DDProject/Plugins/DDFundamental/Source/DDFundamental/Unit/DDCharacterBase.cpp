@@ -41,3 +41,11 @@ void ADDCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+void ADDCharacterBase::TryAttack()
+{
+}
+
+void ADDCharacterBase::TryAiming() const
+{
+}
