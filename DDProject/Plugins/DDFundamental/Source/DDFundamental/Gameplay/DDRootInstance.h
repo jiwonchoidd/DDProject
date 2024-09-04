@@ -26,10 +26,12 @@ public:
 private:
 	virtual void Init() override;
 	virtual void Shutdown() override;
+	virtual bool Tick(float _DeltaTime);
 protected:
 	virtual void InitSingletons();
 	virtual void ShutdownSingletons();
 	TArray<class ISingleton*> Singletons;
 private:
+	FTSTicker::FDelegateHandle TickDelegateHandle;
 	EDDDevice Device = EDDDevice::NONE;
 };

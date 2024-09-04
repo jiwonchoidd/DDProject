@@ -34,6 +34,8 @@ void UDDRootInstance::Init()
 	{
 		Singleton->Initialize();
 	}
+
+	TickDelegateHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &ThisClass::Tick));
 }
 
 void UDDRootInstance::Shutdown()
@@ -48,8 +50,18 @@ void UDDRootInstance::Shutdown()
 
 	Singletons.Reset();
 
+	FTSTicker::GetCoreTicker().RemoveTicker(TickDelegateHandle);
 	RootInstance = nullptr;
 	Super::Shutdown();
+}
+
+bool UDDRootInstance::Tick(float _DeltaTime)
+{
+	for(ISingleton* Singleton : Singletons)
+	{
+		Singleton->Tick(_DeltaTime);
+	}
+	return true;
 }
 
 void UDDRootInstance::InitSingletons()
