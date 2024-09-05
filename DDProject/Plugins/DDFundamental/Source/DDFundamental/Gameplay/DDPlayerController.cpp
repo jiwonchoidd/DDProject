@@ -51,6 +51,11 @@ ADDPlayerController::ADDPlayerController()
 	}
 }
 
+void ADDPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+}
+
 void ADDPlayerController::BeginPlay()
 {
 	Super::BeginPlay();

@@ -17,6 +17,7 @@ enum class EDDSceneState : uint8
 	Logo,
 	Login,
 	Lobby,
+	Test,
 	Max = 0xff
 };
 
@@ -38,4 +39,4 @@ private:
 	class UDDState* SceneState = nullptr;
 };
 
-#define gSceneMng (*UGW_SceneManager::GetInstance())
+#define gSceneMng (*UDDSceneManager::GetInstance())

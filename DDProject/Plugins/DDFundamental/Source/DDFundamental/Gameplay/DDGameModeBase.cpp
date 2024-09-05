@@ -8,7 +8,6 @@ ADDGameModeBase::ADDGameModeBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	DefaultPawnClass = ADDCharacterBase::StaticClass();
 	PlayerControllerClass = ADDPlayerController::StaticClass();
 } 
 

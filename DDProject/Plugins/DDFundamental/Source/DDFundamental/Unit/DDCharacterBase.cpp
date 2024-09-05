@@ -49,3 +49,8 @@ void ADDCharacterBase::TryAttack()
 void ADDCharacterBase::TryAiming() const
 {
 }
+
+void ADDCharacterBase::Jump()
+{
+	Super::Jump();
+}

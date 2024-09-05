@@ -3,7 +3,8 @@
 
 #include "DDSceneManager.h"
 
-#include "DDFundamental/Scene/DDLobbyState.h"
+#include "DDFundamental/Scene/DDLobbyScene.h"
+#include "DDFundamental/Scene/DDTestScene.h"
 #include "DDFundamental/Struct/DDState.h"
 
 void UDDSceneManager::Initialize()
@@ -15,7 +16,8 @@ void UDDSceneManager::Initialize()
 		SceneState->Create();
 	}
 
-	SceneState->AddState(EDDSceneState::Lobby, UDDLobbyState::StaticClass(), this);
+	SceneState->AddState(EDDSceneState::Test, UDDTestScene::StaticClass(), this);
+	SceneState->AddState(EDDSceneState::Lobby, UDDLobbyScene::StaticClass(), this);
 }
 
 void UDDSceneManager::Finalize()

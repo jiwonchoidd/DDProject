@@ -13,7 +13,7 @@
 
 struct FDDSpawnCommand
 {
-	FSoftObjectPath Sop;
+	FString AssetPath;
 	FVector Pos = FVector::ZeroVector;
 	FRotator Rot = FRotator::ZeroRotator;
 };
@@ -26,16 +26,18 @@ class DDFUNDAMENTAL_API UDDUnitManager : public UObject, public DDSingleton<UDDU
 	GENERATED_BODY()
 
 public:
-	static DDHandle UnitHandle;
+	static DDHandle NextHandle;
 protected: 
 	virtual void Initialize() override;
 	virtual void Finalize() override;
-
 	virtual void Tick(float _DeltaTime) override;
+	
 public:
 	void CreateUnit(const TSubclassOf<class UDDUnitBase>& _UnitType, const FDDSpawnCommand& _SpawnCommand);
+	TWeakObjectPtr<UDDUnitBase> GetUnit(DDHandle _Handle);
 private:
-	void OnLoadComplete(TSubclassOf<UDDUnitBase> _UnitType, const FDDSpawnCommand& _Command);
+	void CreateUnit_Internal(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _Command);
+	void Test();
 private:
 	TMap<DDHandle, class UDDUnitBase*> UnitContainer;
 };

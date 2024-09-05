@@ -9,12 +9,12 @@
 #include "DDFundamental/Unit/DDUnitBase.h"
 
 
-DDHandle UDDUnitManager::UnitHandle = 0;
+DDHandle UDDUnitManager::NextHandle = 0;
 
 void UDDUnitManager::Initialize()
 {
 	UnitContainer.Reset();
-	UnitHandle = 0;
+	NextHandle = 0;
 }
 
 void UDDUnitManager::Finalize()
@@ -28,45 +28,54 @@ void UDDUnitManager::Tick(float _DeltaTime)
 
 void UDDUnitManager::CreateUnit(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _SpawnCommand)
 {
-	gLoader.LoadAsset(_SpawnCommand.Sop, FStreamableDelegate::CreateLambda(
-		                  [_WeakThis = MakeWeakObjectPtr(this), _UnitType, _SpawnCommand]()
-		                  {
-			                  if (!_WeakThis.IsValid())
-				                  return;
-		                  	
-			                  _WeakThis->OnLoadComplete(_UnitType, _SpawnCommand);
-		                  }));
+	CreateUnit_Internal(_UnitType, _SpawnCommand);
 }
 
-void UDDUnitManager::OnLoadComplete(TSubclassOf<UDDUnitBase> _UnitType, const FDDSpawnCommand& _Command)
+TWeakObjectPtr<UDDUnitBase> UDDUnitManager::GetUnit(DDHandle _Handle)
 {
-	UObject* pObj = _Command.Sop.ResolveObject();
-	if (!IsValid(pObj))
-		return;
-
-	UBlueprint* pBp = Cast<UBlueprint>(pObj);
-	if(pBp->GeneratedClass->IsChildOf(ADDCharacterBase::StaticClass()))
+	if(UnitContainer.Contains(_Handle))
 	{
-		if(!IsValid(UDDRootInstance::RootInstance))
-			return;
+		return UnitContainer[_Handle];
+	}
+	return nullptr;
+}
 
+void UDDUnitManager::CreateUnit_Internal(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _Command)
+{
+	UDDUnitBase* pUnit = NewObject<UDDUnitBase>(this, _UnitType);
+	pUnit->AddToRoot();
+	if (!pUnit->CreateUnit(NextHandle, _Command))
+	{
+		pUnit->RemoveFromRoot();
+		pUnit = nullptr;
+		return;
+	}
+	UnitContainer.Add(NextHandle++, pUnit); 
+}
+
+void UDDUnitManager::Test()
+{
+	/*UObject* pObj = _Command.Sop.ResolveObject();
+	if (!IsValid(pObj))
+		return false;
+
+	const UBlueprint* pBp = Cast<UBlueprint>(pObj);
+	ADDCharacterBase* SpawnActor = nullptr;
+	if (pBp->GeneratedClass->IsChildOf(ADDCharacterBase::StaticClass()))
+	{
 		if (UWorld* pWorld = UDDRootInstance::RootInstance->GetWorld())
 		{
-			ADDCharacterBase* pChar = Cast<ADDCharacterBase>(gLoader.SpawnActor(
+			SpawnActor = Cast<ADDCharacterBase>(gLoader.SpawnActor(
 				pBp->GeneratedClass, pWorld,
 				_Command.Pos, _Command.Rot,
-				_Command.Sop.ToString(),
+				TEXT("UnitActor"),
 				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn));
 		}
 	}
+	if (SpawnActor == nullptr)
+		return false;
 
-	/*if (pUnit->GetUnitHandle() == )
-	{
-		return nullptr;
-	}
-
-
-	UnitContainer.Add(pUnit->GetUnitHandle(), pUnit);
-
-	return pUnit;*/
+	UnitActor = SpawnActor;
+	Handle = _Handle;
+	return true;*/
 }

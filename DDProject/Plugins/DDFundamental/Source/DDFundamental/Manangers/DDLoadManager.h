@@ -22,10 +22,12 @@ public:
 	virtual void Tick(float _DeltaTime) override;
 	virtual void Finalize() override;
 public:
-	TSharedPtr<FStreamableHandle> LoadAsset(const FSoftObjectPath& _AssetRef, TFunction<void()>&& _Callback);
-	TSharedPtr<FStreamableHandle> LoadAsset(const TArray<FSoftObjectPath>& _AssetRef, TFunction<void()>&& _Callback);
-	TSharedPtr<FStreamableHandle> LoadAsset(const FSoftObjectPath& _AssetRef, FStreamableDelegate _Callback);
-	TSharedPtr<FStreamableHandle> LoadAsset(const TArray<FSoftObjectPath>& _AssetRef, FStreamableDelegate _Callback);
+	static TSharedPtr<FStreamableHandle> AsyncLoadAsset(const FSoftObjectPath& _AssetRef, TFunction<void()>&& _Callback);
+	static TSharedPtr<FStreamableHandle> AsyncLoadAsset(const TArray<FSoftObjectPath>& _AssetRef, TFunction<void()>&& _Callback);
+	static TSharedPtr<FStreamableHandle> AsyncLoadAsset(const FSoftObjectPath& _AssetRef, FStreamableDelegate _Callback);
+	static TSharedPtr<FStreamableHandle> AsyncLoadAsset(const TArray<FSoftObjectPath>& _AssetRef, FStreamableDelegate _Callback);
+	
+	UObject*							 SyncLoadAsset(const FString& _AssetPath) const;
 
 	UFUNCTION(BlueprintCallable, Category = "DDAsset")
 	AActor* SpawnActor(UClass* _Class, UWorld* _World, const FVector& _Loc, const FRotator& _Rot, const FString& _Label, ESpawnActorCollisionHandlingMethod _Method = ESpawnActorCollisionHandlingMethod::AlwaysSpawn);

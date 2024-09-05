@@ -15,7 +15,7 @@ void UDDRootInstance::Init()
 	Super::Init();
 
 	RootInstance = this;
-	
+
 #if defined(ANDROID_PLATFORM)
 	Device = EDDDevice::AOS;
 	FPlatformApplicationMisc::ControlScreensaver(FGenericPlatformApplicationMisc::EScreenSaverAction::Disable);
@@ -29,8 +29,8 @@ void UDDRootInstance::Init()
 	Singletons.Reset();
 
 	InitSingletons();
-	
-	for(ISingleton* Singleton : Singletons)
+
+	for (ISingleton* Singleton : Singletons)
 	{
 		Singleton->Initialize();
 	}
@@ -40,12 +40,12 @@ void UDDRootInstance::Init()
 
 void UDDRootInstance::Shutdown()
 {
-	for(ISingleton* Singleton : Singletons)
+	for (ISingleton* Singleton : Singletons)
 	{
 		Singleton->Finalize();
 		Singleton = nullptr;
 	}
-	
+
 	ShutdownSingletons();
 
 	Singletons.Reset();
@@ -57,11 +57,27 @@ void UDDRootInstance::Shutdown()
 
 bool UDDRootInstance::Tick(float _DeltaTime)
 {
-	for(ISingleton* Singleton : Singletons)
+	for (ISingleton* Singleton : Singletons)
 	{
 		Singleton->Tick(_DeltaTime);
 	}
 	return true;
+}
+
+void UDDRootInstance::OnStart()
+{
+#if WITH_EDITOR
+	if (IsValid(GEditor)
+		&& GEditor->IsPlayingSessionInEditor()
+		&& GEditor->GetPlayInEditorSessionInfo()->OriginalRequestParams.HasPlayWorldPlacement())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("TEST-MODE"));
+		gSceneMng.ChangeLevel(EDDSceneState::Test);
+	}
+	else
+#endif
+	{
+	}
 }
 
 void UDDRootInstance::InitSingletons()

@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "DDFundamental/Struct/DDBaseState.h"
-#include "DDLobbyState.generated.h"
+#include "DDTestScene.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DDFUNDAMENTAL_API UDDLobbyState : public UDDBaseState
+class DDFUNDAMENTAL_API UDDTestScene : public UDDBaseState
 {
 	GENERATED_BODY()
 

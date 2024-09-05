@@ -14,6 +14,8 @@ class DDFUNDAMENTAL_API ADDPlayerController : public APlayerController
 
 public:
 	ADDPlayerController();
+
+	virtual void OnPossess(APawn* InPawn) override;
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;

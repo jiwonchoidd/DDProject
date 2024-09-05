@@ -22,6 +22,21 @@ public class DDFundamental : ModuleRules
 			);
 			
 		
+		if (Target.bBuildEditor == true)
+		{
+			PublicDependencyModuleNames.AddRange(new string[]
+			{
+				"EditorScriptingUtilities",
+				"UnrealEd",
+				"Sequencer",
+				"Persona",
+				"AnimationEditor",
+				"EditorStyle",
+				"DesktopPlatform",
+				"MessageLog"
+			});
+		}
+		
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
