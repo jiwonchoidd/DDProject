@@ -20,7 +20,7 @@ bool UDDUnitBase::CreateUnit(int32 _Handle, const FDDSpawnCommand& _Command)
 	ADDCharacterBase* SpawnActor = nullptr;
 	if (pBp->GeneratedClass->IsChildOf(ADDCharacterBase::StaticClass()))
 	{
-		if (UWorld* pWorld = UDDRootInstance::RootInstance->GetWorld())
+		if (UWorld* pWorld = GDDInstance->GetWorld())
 		{
 			SpawnActor = Cast<ADDCharacterBase>(gLoader.SpawnActor(
 				pBp->GeneratedClass, pWorld,

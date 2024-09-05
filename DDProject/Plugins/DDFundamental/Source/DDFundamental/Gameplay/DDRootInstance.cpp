@@ -8,13 +8,13 @@
 #include "DDFundamental/Manangers/DDUnitManager.h"
 #include "Windows/WindowsPlatformApplicationMisc.h"
 
-UDDRootInstance* UDDRootInstance::RootInstance = nullptr;
+UDDRootInstance* GDDInstance = nullptr;
 
 void UDDRootInstance::Init()
 {
 	Super::Init();
 
-	RootInstance = this;
+	GDDInstance = this;
 
 #if defined(ANDROID_PLATFORM)
 	Device = EDDDevice::AOS;
@@ -51,7 +51,8 @@ void UDDRootInstance::Shutdown()
 	Singletons.Reset();
 
 	FTSTicker::GetCoreTicker().RemoveTicker(TickDelegateHandle);
-	RootInstance = nullptr;
+	
+	GDDInstance = nullptr;
 	Super::Shutdown();
 }
 
