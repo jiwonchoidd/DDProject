@@ -62,3 +62,6 @@ SourceArt/**/*.tga
 # Cache files for the editor to use
 */DerivedDataCache/*
 */.idea/*
+
+#Jun
+out/
