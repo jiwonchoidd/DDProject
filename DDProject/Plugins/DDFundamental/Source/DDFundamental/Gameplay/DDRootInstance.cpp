@@ -35,11 +35,23 @@ void UDDRootInstance::Init()
 		Singleton->Initialize();
 	}
 
+	if (UWorld* pWorld = GetWorld())
+	{
+		pWorld->OnWorldBeginPlay.AddUObject(this, &ThisClass::OnWorldBeginPlay);
+	}
+	
 	TickDelegateHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &ThisClass::Tick));
 }
 
 void UDDRootInstance::Shutdown()
 {
+	FTSTicker::GetCoreTicker().RemoveTicker(TickDelegateHandle);
+
+	if (UWorld* pWorld = GetWorld())
+	{
+		pWorld->OnWorldBeginPlay.RemoveAll(this);
+	}
+	
 	for (ISingleton* Singleton : Singletons)
 	{
 		Singleton->Finalize();
@@ -49,8 +61,6 @@ void UDDRootInstance::Shutdown()
 	ShutdownSingletons();
 
 	Singletons.Reset();
-
-	FTSTicker::GetCoreTicker().RemoveTicker(TickDelegateHandle);
 	
 	GDDInstance = nullptr;
 	Super::Shutdown();
@@ -65,7 +75,7 @@ bool UDDRootInstance::Tick(float _DeltaTime)
 	return true;
 }
 
-void UDDRootInstance::OnStart()
+void UDDRootInstance::OnWorldBeginPlay()
 {
 #if WITH_EDITOR
 	if (IsValid(GEditor)

@@ -25,8 +25,8 @@ private:
 	virtual void Init() override;
 	virtual void Shutdown() override;
 	virtual bool Tick(float _DeltaTime);
-protected:
-	virtual void OnStart() override;
+private:
+	void OnWorldBeginPlay();
 protected:
 	virtual void InitSingletons();
 	virtual void ShutdownSingletons();

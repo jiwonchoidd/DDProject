@@ -15,7 +15,7 @@ class DDFUNDAMENTAL_API UDDUnitBase : public UObject
 
 public:
 	bool CreateUnit(int32 _Handle, const FDDSpawnCommand& _Command);
-	
+public:
 	FORCEINLINE int32 GetUnitHandle() const { return Handle; }
 	FORCEINLINE TWeakObjectPtr<class ADDCharacterBase> GetUnitActor() const { return UnitActor; }
 private:

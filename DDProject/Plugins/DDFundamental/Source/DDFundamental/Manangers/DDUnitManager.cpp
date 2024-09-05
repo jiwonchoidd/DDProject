@@ -26,9 +26,9 @@ void UDDUnitManager::Tick(float _DeltaTime)
 	
 }
 
-void UDDUnitManager::CreateUnit(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _SpawnCommand)
+UDDUnitBase* UDDUnitManager::CreateUnit(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _SpawnCommand)
 {
-	CreateUnit_Internal(_UnitType, _SpawnCommand);
+	return CreateUnit_Internal(_UnitType, _SpawnCommand);
 }
 
 TWeakObjectPtr<UDDUnitBase> UDDUnitManager::GetUnit(DDHandle _Handle)
@@ -40,7 +40,8 @@ TWeakObjectPtr<UDDUnitBase> UDDUnitManager::GetUnit(DDHandle _Handle)
 	return nullptr;
 }
 
-void UDDUnitManager::CreateUnit_Internal(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _Command)
+UDDUnitBase* UDDUnitManager::CreateUnit_Internal(const TSubclassOf<UDDUnitBase>& _UnitType,
+                                                 const FDDSpawnCommand& _Command)
 {
 	UDDUnitBase* pUnit = NewObject<UDDUnitBase>(this, _UnitType);
 	pUnit->AddToRoot();
@@ -48,9 +49,10 @@ void UDDUnitManager::CreateUnit_Internal(const TSubclassOf<UDDUnitBase>& _UnitTy
 	{
 		pUnit->RemoveFromRoot();
 		pUnit = nullptr;
-		return;
+		return nullptr;
 	}
-	UnitContainer.Add(NextHandle++, pUnit); 
+	UnitContainer.Add(NextHandle++, pUnit);
+	return pUnit;
 }
 
 void UDDUnitManager::Test()

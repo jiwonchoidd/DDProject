@@ -33,10 +33,10 @@ protected:
 	virtual void Tick(float _DeltaTime) override;
 	
 public:
-	void CreateUnit(const TSubclassOf<class UDDUnitBase>& _UnitType, const FDDSpawnCommand& _SpawnCommand);
-	TWeakObjectPtr<UDDUnitBase> GetUnit(DDHandle _Handle);
+	class UDDUnitBase* CreateUnit(const TSubclassOf<class UDDUnitBase>& _UnitType, const FDDSpawnCommand& _SpawnCommand);
+	TWeakObjectPtr<class UDDUnitBase> GetUnit(DDHandle _Handle);
 private:
-	void CreateUnit_Internal(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _Command);
+	class UDDUnitBase* CreateUnit_Internal(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _Command);
 	void Test();
 private:
 	TMap<DDHandle, class UDDUnitBase*> UnitContainer;

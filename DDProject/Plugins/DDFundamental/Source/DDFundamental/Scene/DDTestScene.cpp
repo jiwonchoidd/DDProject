@@ -11,16 +11,36 @@ void UDDTestScene::Begin()
 {
 	Super::Begin();
 
-	FDDSpawnCommand sc;
-	sc.Pos = FVector(0,0,100);
-	sc.Rot = FRotator(0,0,0);
-	sc.AssetPath = TEXT("/Script/Engine.Blueprint'/Game/Unit/BP_CharBase.BP_CharBase'");
-	gUnitMng.CreateUnit(UDDUnitBase::StaticClass(), sc);
-	ADDCharacterBase* Pawn = gUnitMng.GetUnit(0)->GetUnitActor().Get();
-	const UWorld* World = GDDInstance->GetWorld();
-	if (ADDPlayerController* PC = Cast<ADDPlayerController>(UGameplayStatics::GetPlayerController(World, 0)))
+	FDDSpawnCommand SC;
+	SC.Pos = FVector(0,0,100);
+	SC.Rot = FRotator(0,0,0);
+	SC.AssetPath = TEXT("/Script/Engine.Blueprint'/Game/Unit/BP_CharBase.BP_CharBase'");
+	
+	if(const UDDUnitBase* UnitBase = gUnitMng.CreateUnit(UDDUnitBase::StaticClass(), SC))
 	{
-		PC->OnPossess(Pawn);
+		const UWorld* World = GDDInstance->GetWorld();
+		if (World == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("World is null"));
+			return;
+		}
+
+		ADDPlayerController* PC = Cast<ADDPlayerController>(UGameplayStatics::GetPlayerController(World, 0));
+		if (PC == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("PlayerController is null"));
+			return;
+		}
+
+		APawn* UnitActor = UnitBase->GetUnitActor().Get();
+		if (UnitActor == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("UnitActor is null"));
+			return;
+		}
+
+		PC->OnPossess(UnitActor);
+		UE_LOG(LogTemp, Log, TEXT("PlayerController possessed the UnitActor"));
 	}
 }
 
