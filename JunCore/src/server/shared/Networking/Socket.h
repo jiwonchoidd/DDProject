@@ -1,7 +1,10 @@
-namespace Socket
+ #include <boost/asio/ip/tcp.hpp>
+
+template<class T, class Stream = boost::asio::ip::tcp::socket>
+class Socket : public std::enable_shared_from_this<T>
 {
-	int f()
-	{
-		return 3;
+public:
+	int f() {
+		return 33;
 	}
-}
+};

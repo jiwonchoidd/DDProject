@@ -1,9 +1,14 @@
 #include <iostream>
-#include "../shared/Packets/ByteBuffer.h"
+#include <Networking/Socket.h>>
+
+struct MyStruct
+{
+
+};
 
 int main()
 {
-	std::cout << "aaa" << std::endl;
-	std::cout << ByteBuffer::f() << std::endl;
+	Socket<MyStruct> socket;
+	std::cout << socket.f();
 	return 0;
 }
