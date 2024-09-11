@@ -3,7 +3,7 @@
 
 #include "DDRootInstance.h"
 
-#include "DDFundamental/Manangers/DDLoadManager.h"
+#include "DDFundamental/Manangers/DDFunctionLibrary.h"
 #include "DDFundamental/Manangers/DDSceneManager.h"
 #include "DDFundamental/Manangers/DDUnitManager.h"
 #include "Windows/WindowsPlatformApplicationMisc.h"
@@ -93,7 +93,6 @@ void UDDRootInstance::OnWorldBeginPlay()
 
 void UDDRootInstance::InitSingletons()
 {
-	Singletons.Emplace(UDDLoadManager::MakeInstance());
 	Singletons.Emplace(UDDUnitManager::MakeInstance());
 	Singletons.Emplace(UDDSceneManager::MakeInstance());
 }
@@ -102,5 +101,4 @@ void UDDRootInstance::ShutdownSingletons()
 {
 	UDDSceneManager::RemoveInstance();
 	UDDUnitManager::RemoveInstance();
-	UDDLoadManager::RemoveInstance();
 }

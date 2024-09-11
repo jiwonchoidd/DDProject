@@ -5,12 +5,12 @@
 
 #include "DDCharacterBase.h"
 #include "DDFundamental/Gameplay/DDRootInstance.h"
-#include "DDFundamental/Manangers/DDLoadManager.h"
+#include "DDFundamental/Manangers/DDFunctionLibrary.h"
 #include "DDFundamental/Manangers/DDUnitManager.h"
 
 bool UDDUnitBase::CreateUnit(int32 _Handle, const FDDSpawnCommand& _Command)
 {
-	UObject* pObj = gLoader.SyncLoadAsset(_Command.AssetPath);
+	UObject* pObj = UDDFunctionLibrary::SyncLoadAsset(_Command.AssetPath);
 	if (!IsValid(pObj))
 	{
 		return false;
@@ -22,7 +22,7 @@ bool UDDUnitBase::CreateUnit(int32 _Handle, const FDDSpawnCommand& _Command)
 	{
 		if (UWorld* pWorld = GDDInstance->GetWorld())
 		{
-			SpawnActor = Cast<ADDCharacterBase>(gLoader.SpawnActor(
+			SpawnActor = Cast<ADDCharacterBase>(UDDFunctionLibrary::SpawnActor(
 				pBp->GeneratedClass, pWorld,
 				_Command.Pos, _Command.Rot,
 				TEXT("UnitActor"),
