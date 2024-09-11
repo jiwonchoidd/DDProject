@@ -1,0 +1,4 @@
+namespace ByteBuffer
+{
+	int f();
+}

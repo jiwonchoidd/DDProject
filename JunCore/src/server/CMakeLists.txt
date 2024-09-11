@@ -1,1 +1,2 @@
-﻿add_subdirectory(worldserver)
+﻿add_subdirectory(shared)
+add_subdirectory(worldserver)
