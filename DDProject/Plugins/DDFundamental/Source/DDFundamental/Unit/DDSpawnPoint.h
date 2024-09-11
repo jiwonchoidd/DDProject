@@ -9,6 +9,7 @@
 USTRUCT()
 struct FDDSpawnOption
 {
+	GENERATED_BODY()
 	int32 UnitTableId = 0;
 };
 
