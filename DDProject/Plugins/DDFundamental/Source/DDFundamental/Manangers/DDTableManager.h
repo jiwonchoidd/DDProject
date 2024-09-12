@@ -7,12 +7,6 @@
 #include "UObject/Object.h"
 #include "DDTableManager.generated.h"
 
-UENUM()
-enum class ETableDataType : uint8
-{
-	UnitResource = 0,
-};
-
 UCLASS()
 class DDFUNDAMENTAL_API UDDTableManager : public UObject, public DDSingleton<UDDTableManager>
 {
@@ -23,14 +17,18 @@ protected:
 	virtual void Finalize() override;
 
 public:
-	void	LoadDataTable();
+	void				LoadDataTable(const UEnum* _pEnum);
+	template <typename T, typename = typename TEnableIf<TIsEnum<T>::Value>::Type>
+	class UDataTable*	GetTableData(T _Enum);
+	
+	FORCEINLINE int32	GetLoadCounter() const { return LoadCounter; }
 private:
-	void OnLoadComplete(const TArray<FSoftObjectPath>& _LoadedSof);
-	TArray<FSoftObjectPath> GetTablePaths() const;
+	void					OnLoadComplete(const UEnum* _pEnum, const TArray<FSoftObjectPath>& _LoadedSof);
+	TArray<FSoftObjectPath> GetTableSofPaths(const UEnum* _pEnum) const;
 	
 private:
 	UPROPERTY()
-	TMap<ETableDataType, class UDataTable*> mapTables;
+	TMap<uint8, class UDataTable*> mapTables;
 
 	int32 LoadCounter = 0;
 };

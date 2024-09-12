@@ -15,8 +15,6 @@ void UDDTableManager::Initialize()
 {
 	mapTables.Reset();
 	LoadCounter = 0;
-
-	LoadDataTable();
 }
 
 void UDDTableManager::Finalize()
@@ -31,27 +29,43 @@ void UDDTableManager::Finalize()
 	mapTables.Reset();
 }
 
-// --------------------------------------------------------------------------------
-
-void UDDTableManager::LoadDataTable()
+void UDDTableManager::LoadDataTable(const UEnum* _pEnum)
 {
-	TArray<FSoftObjectPath> Paths = GetTablePaths();
-	UDDFunctionLibrary::AsyncLoadAsset(Paths, [this, Paths]
+	TArray<FSoftObjectPath> Paths = GetTableSofPaths(_pEnum);
+
+	TWeakObjectPtr<UDDTableManager> WeakThis(this);
+	UDDFunctionLibrary::AsyncLoadAsset(Paths, [WeakThis, Paths, _pEnum]
 	{
-		OnLoadComplete(Paths);
+		if(WeakThis.IsValid() && IsValid(_pEnum))
+		{
+			WeakThis->OnLoadComplete(_pEnum, Paths);
+		}
 	});
 }
 
 // --------------------------------------------------------------------------------
 
-void UDDTableManager::OnLoadComplete(const TArray<FSoftObjectPath>& _LoadedSof)
+template <typename T, typename>
+UDataTable* UDDTableManager::GetTableData(T _Enum)
 {
-	const UEnum* Enum = StaticEnum<ETableDataType>();
+	const uint8 Index = static_cast<uint8>(_Enum);
+
+	if(mapTables.Contains(Index))
+	{
+		return mapTables[Index];
+	}
+	return nullptr;
+}
+
+// --------------------------------------------------------------------------------
+
+void UDDTableManager::OnLoadComplete(const UEnum* _pEnum, const TArray<FSoftObjectPath>& _LoadedSof)
+{
 	for(auto Sof : _LoadedSof)
 	{
 		FString AssetName = FPaths::GetBaseFilename(Sof.GetAssetName());
 		
-		const int64 Index = Enum->GetIndexByName(FName(AssetName));
+		const int64 Index = _pEnum->GetIndexByName(FName(AssetName));
 		if (Index == INDEX_NONE)
 		{
 			continue;
@@ -61,12 +75,12 @@ void UDDTableManager::OnLoadComplete(const TArray<FSoftObjectPath>& _LoadedSof)
 
 		check(Obj);
 		
-		mapTables.Add(static_cast<ETableDataType>(Index), Obj);
+		mapTables.Add(Index, Obj);
 	}
 	LoadCounter++;
 }
 
-TArray<FSoftObjectPath> UDDTableManager::GetTablePaths() const
+TArray<FSoftObjectPath> UDDTableManager::GetTableSofPaths(const UEnum* _pEnum) const
 {
 	const FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
 	//AssetRegistryModule.Get().ScanPathsSynchronous({TablePath});
@@ -77,11 +91,20 @@ TArray<FSoftObjectPath> UDDTableManager::GetTablePaths() const
 
 	TArray<FAssetData> arrAssetData;
 	AssetRegistryModule.Get().GetAssets(Filter, arrAssetData);
-
+	
 	TArray<FSoftObjectPath> ResultPath;
+
 	for (int32 i = 0; i < arrAssetData.Num(); ++i)
 	{
-		ResultPath.Emplace(FSoftObjectPath(arrAssetData[i].GetSoftObjectPath()));
+		FString AssetName = FPaths::GetBaseFilename(arrAssetData[i].AssetName.ToString());
+		const int64 Index = _pEnum->GetIndexByName(FName(AssetName));
+		if (Index == INDEX_NONE) // Enum 값과 테이블 이름 일치 체크
+		{
+			UE_LOG(LogTemp, Error, TEXT("%hs Table AssetName is Wrong %s"), __FUNCTION__, *AssetName)
+			continue;
+		}
+		
+		ResultPath.Emplace(arrAssetData[i].GetSoftObjectPath());
 	}
 
 	return ResultPath;
