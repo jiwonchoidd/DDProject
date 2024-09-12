@@ -31,6 +31,7 @@ protected:
 	virtual void InitSingletons();
 	virtual void ShutdownSingletons();
 	TArray<class ISingleton*> Singletons;
+	
 private:
 	FTSTicker::FDelegateHandle TickDelegateHandle;
 	EDDDevice Device = EDDDevice::NONE;

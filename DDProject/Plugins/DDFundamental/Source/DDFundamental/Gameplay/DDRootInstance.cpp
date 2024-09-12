@@ -4,6 +4,7 @@
 #include "DDRootInstance.h"
 
 #include "DDFundamental/Manangers/DDSceneManager.h"
+#include "DDFundamental/Manangers/DDTableManager.h"
 #include "DDFundamental/Manangers/DDUnitManager.h"
 #include "Windows/WindowsPlatformApplicationMisc.h"
 
@@ -93,11 +94,13 @@ void UDDRootInstance::OnWorldBeginPlay()
 void UDDRootInstance::InitSingletons()
 {
 	Singletons.Emplace(UDDUnitManager::MakeInstance());
+	Singletons.Emplace(UDDTableManager::MakeInstance());
 	Singletons.Emplace(UDDSceneManager::MakeInstance());
 }
 
 void UDDRootInstance::ShutdownSingletons()
 {
 	UDDSceneManager::RemoveInstance();
+	UDDTableManager::RemoveInstance();
 	UDDUnitManager::RemoveInstance();
 }
