@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class DDFUNDAMENTAL_API UDDTestScene : public UDDBaseState
+class UDDTestScene : public UDDBaseState
 {
 	GENERATED_BODY()
 

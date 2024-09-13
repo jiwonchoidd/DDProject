@@ -4,8 +4,8 @@
 #include "DDFundamental/Manangers/DDSceneManager.h"
 #include "DDFundamental/Manangers/DDTableManager.h"
 #include "DDFundamental/Manangers/DDUnitManager.h"
-#include "DDFundamental/Scene/DDTestScene.h"
 #include "DDProject/Manager/DDNetworkManager.h"
+#include "DDProject/Scene/DDTestScene.h"
 
 void UDDGameInstance::Init()
 {

@@ -3,8 +3,6 @@
 
 #include "DDSceneManager.h"
 
-#include "DDFundamental/Scene/DDLobbyScene.h"
-#include "DDFundamental/Scene/DDTestScene.h"
 #include "DDFundamental/Struct/DDStateMachine.h"
 
 void UDDSceneManager::Initialize()
