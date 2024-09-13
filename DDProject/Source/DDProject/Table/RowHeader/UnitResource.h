@@ -6,6 +6,6 @@ struct FUnitResource : public FTableRowBase
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(EditAnywhere)
-	USkeletalMesh* Mesh = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Mesh")
+	TSoftObjectPtr<USkeletalMesh> SkeletalMesh;
 };

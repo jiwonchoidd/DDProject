@@ -72,8 +72,8 @@ void ADDSpawnPoint::BeginPlay()
 		FDDSpawnCommand SC;
 		SC.Pos = GetActorLocation();
 		SC.Rot = GetActorRotation();
-		//UnitResource->Mesh;
-	
+		SC.AssetPath = TEXT("/Script/Engine.Blueprint'/Game/Unit/BP_CharBase.BP_CharBase'");
+
 		if(const UDDUnitBase* UnitBase = gUnitMng.CreateUnit(UDDUnitBase::StaticClass(), SC))
 		{
 #if WITH_EDITOR

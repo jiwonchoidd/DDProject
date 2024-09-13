@@ -16,6 +16,7 @@ struct FDDSpawnCommand
 	FString AssetPath;
 	FVector Pos = FVector::ZeroVector;
 	FRotator Rot = FRotator::ZeroRotator;
+	int32 UnitTableId = 0;
 };
 
 typedef int32 DDHandle;
