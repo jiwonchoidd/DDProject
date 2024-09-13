@@ -27,10 +27,20 @@ TSharedPtr<FStreamableHandle> UDDFunctionLibrary::AsyncLoadAsset(const TArray<FS
 	return UAssetManager::Get().LoadAssetList(_AssetRef, _Callback);
 }
 
-UObject* UDDFunctionLibrary::SyncLoadAsset(const FString& _AssetPath)
+void UDDFunctionLibrary::SyncLoadAsset(const TArray<FSoftObjectPath>& _SofList)
 {
-	UObject* LoadedAsset = Cast<UObject>(StaticLoadObject(UObject::StaticClass(), nullptr, *_AssetPath));
-	return LoadedAsset;
+	TArray<UObject*> LoadObjs;
+
+	for(const auto& Sof : _SofList)
+	{
+		TSharedPtr<FStreamableHandle> Handle = UAssetManager::GetStreamableManager().RequestSyncLoad(Sof);
+	}
+}
+
+UObject* UDDFunctionLibrary::SyncLoadAsset(const FSoftObjectPath& _AssetPath)
+{
+	const TSoftObjectPtr LoadPtr = TSoftObjectPtr(_AssetPath);
+	return LoadPtr.LoadSynchronous();
 }
 
 AActor* UDDFunctionLibrary::SpawnActor(UClass* _Class, UWorld* _World, const FVector& _Loc, const FRotator& _Rot,

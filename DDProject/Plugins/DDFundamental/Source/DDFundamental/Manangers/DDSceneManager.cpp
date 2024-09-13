@@ -5,19 +5,16 @@
 
 #include "DDFundamental/Scene/DDLobbyScene.h"
 #include "DDFundamental/Scene/DDTestScene.h"
-#include "DDFundamental/Struct/DDState.h"
+#include "DDFundamental/Struct/DDStateMachine.h"
 
 void UDDSceneManager::Initialize()
 {
-	SceneState = NewObject<UDDState>();
+	SceneState = NewObject<UDDStateMachine>();
 	if(IsValid(SceneState))
 	{
 		SceneState->AddToRoot();
 		SceneState->Create();
 	}
-
-	SceneState->AddState(EDDSceneState::Test, UDDTestScene::StaticClass(), this);
-	SceneState->AddState(EDDSceneState::Lobby, UDDLobbyScene::StaticClass(), this);
 }
 
 void UDDSceneManager::Finalize()
@@ -32,13 +29,8 @@ void UDDSceneManager::Finalize()
 
 void UDDSceneManager::Tick(float _DeltaTime)
 {
-	
-}
-
-void UDDSceneManager::ChangeLevel(EDDSceneState _SceneState) const
-{
-	if(SceneState)
+	if(IsValid(SceneState))
 	{
-		SceneState->SetState(static_cast<uint8>(_SceneState));
+		SceneState->Tick(_DeltaTime);
 	}
 }

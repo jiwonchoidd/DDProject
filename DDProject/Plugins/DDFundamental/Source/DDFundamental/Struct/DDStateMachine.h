@@ -1,12 +1,12 @@
 #pragma once
 #include "DDFundamental/Struct/DDBaseState.h"
-#include "DDState.generated.h"
+#include "DDStateMachine.generated.h"
 /**
  * 
  */
 
 UCLASS()
-class DDFUNDAMENTAL_API UDDState : public UObject
+class DDFUNDAMENTAL_API UDDStateMachine : public UObject
 {
 	GENERATED_BODY()
 
@@ -14,22 +14,9 @@ public:
 	void Create();
 	void Destroy();
 	void Tick(float _fDeltaTime);
-
-	template <typename T, typename = typename TEnableIf<TIsEnum<T>::Value>::Type>
-    void AddState(T _Enum, TSubclassOf<class UDDBaseState> _SceneType, UObject* _pOuter)
-    {
-        const uint8 Num = static_cast<uint8>(_Enum);
-        if (mapState.Contains(Num))
-            return;
-
-        UObject* ParentObject = IsValid(_pOuter) ? _pOuter : nullptr;
-        if (UDDBaseState* StateBase = NewObject<UDDBaseState>(ParentObject, _SceneType))
-        {
-            StateBase->Initialize(Num);
-            mapState.Add(Num, StateBase);
-        }
-    }
 	
+	void AddState(uint8 _uiIndex, TSubclassOf<class UDDBaseState> _SceneType, UObject* _pOuter);
+
 	void SetState(uint8 _uiIndex, bool _bInstant = true);
 
 	FORCEINLINE uint8 GetPreviousStateID() const { return PreviousStateID; }

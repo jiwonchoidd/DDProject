@@ -6,15 +6,17 @@
 #include "GameFramework/Actor.h"
 #include "DDSpawnPoint.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FDDSpawnOption
 {
 	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int32 UnitTableId = 0;
 };
 
 UCLASS()
-class DDFUNDAMENTAL_API ADDSpawnPoint : public AActor
+class ADDSpawnPoint : public AActor
 {
 	GENERATED_BODY()
 
@@ -34,5 +36,5 @@ private:
 	class UArrowComponent* ArrowComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = SpawnOption, meta=(AllowPrivateAccess = "true"))
-	FDDSpawnOption UnitTableId;
+	FDDSpawnOption SpawnOption;
 };

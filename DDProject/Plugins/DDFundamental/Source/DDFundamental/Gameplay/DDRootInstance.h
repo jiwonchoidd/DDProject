@@ -21,17 +21,17 @@ UCLASS()
 class DDFUNDAMENTAL_API UDDRootInstance : public UGameInstance
 {
 	GENERATED_BODY()
-private:
+
+protected:
 	virtual void Init() override;
 	virtual void Shutdown() override;
 	virtual bool Tick(float _DeltaTime);
-private:
-	void OnWorldBeginPlay();
-protected:
+	
 	virtual void InitSingletons();
 	virtual void ShutdownSingletons();
-	TArray<class ISingleton*> Singletons;
+	virtual void OnWorldBeginPlay();
 	
+	TArray<class ISingleton*> Singletons;
 private:
 	FTSTicker::FDelegateHandle TickDelegateHandle;
 	EDDDevice Device = EDDDevice::NONE;

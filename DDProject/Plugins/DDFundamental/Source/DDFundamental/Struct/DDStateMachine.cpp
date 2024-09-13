@@ -1,12 +1,12 @@
-#include "DDState.h"
+#include "DDStateMachine.h"
 #include "Templates/SubclassOf.h"
 
-void UDDState::Create()
+void UDDStateMachine::Create()
 {
 	mapState.Reset();
 }
 
-void UDDState::Destroy()
+void UDDStateMachine::Destroy()
 {
 	for (TTuple<uint8, UDDBaseState*>& State : mapState)
 	{
@@ -20,7 +20,7 @@ void UDDState::Destroy()
 	mapState.Reset();
 }
 
-void UDDState::Tick(float _fDeltaTime)
+void UDDStateMachine::Tick(float _fDeltaTime)
 {
 	if (ChangeStateID == -1)
 		return;
@@ -31,12 +31,25 @@ void UDDState::Tick(float _fDeltaTime)
 	}
 }
 
-void UDDState::SetState(uint8 _uiIndex, bool _bInstant)
+void UDDStateMachine::AddState(uint8 _uiIndex, TSubclassOf<UDDBaseState> _SceneType, UObject* _pOuter)
+{
+	if (mapState.Contains(_uiIndex))
+		return;
+
+	UObject* ParentObject = IsValid(_pOuter) ? _pOuter : nullptr;
+	if (UDDBaseState* StateBase = NewObject<UDDBaseState>(ParentObject, _SceneType))
+	{
+		StateBase->Initialize(_uiIndex);
+		mapState.Add(_uiIndex, StateBase);
+	}
+}
+
+void UDDStateMachine::SetState(uint8 _uiIndex, bool _bInstant)
 {
 	SetState_Internal(_uiIndex);
 }
 
-UDDBaseState* UDDState::GetStatePtr(uint8 _nIndex)
+UDDBaseState* UDDStateMachine::GetStatePtr(uint8 _nIndex)
 {
 	if (mapState.Contains(_nIndex))
 	{
@@ -49,17 +62,17 @@ UDDBaseState* UDDState::GetStatePtr(uint8 _nIndex)
 	return nullptr;
 }
 
-UDDBaseState* UDDState::GetCurrentStatePtr()
+UDDBaseState* UDDStateMachine::GetCurrentStatePtr()
 {
 	return GetStatePtr(CurrentStateID);
 }
 
-UDDBaseState* UDDState::GetPreviousStatePtr()
+UDDBaseState* UDDStateMachine::GetPreviousStatePtr()
 {
 	return GetStatePtr(PreviousStateID);
 }
 
-void UDDState::SetState_Internal(uint8 _nIndex)
+void UDDStateMachine::SetState_Internal(uint8 _nIndex)
 {
 	ChangeStateID = -1;
 	PreviousStateID = CurrentStateID;

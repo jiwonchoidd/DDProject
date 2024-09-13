@@ -1,11 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "DDRootInstance.h"
 
-#include "DDFundamental/Manangers/DDSceneManager.h"
-#include "DDFundamental/Manangers/DDTableManager.h"
-#include "DDFundamental/Manangers/DDUnitManager.h"
+#include "DDFundamental/Struct/DDSingleton.h"
 #include "Windows/WindowsPlatformApplicationMisc.h"
 
 UDDRootInstance* GDDInstance = nullptr;
@@ -77,30 +72,12 @@ bool UDDRootInstance::Tick(float _DeltaTime)
 
 void UDDRootInstance::OnWorldBeginPlay()
 {
-#if WITH_EDITOR
-	if (IsValid(GEditor)
-		&& GEditor->IsPlayingSessionInEditor()
-		&& GEditor->GetPlayInEditorSessionInfo()->OriginalRequestParams.HasPlayWorldPlacement())
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("TEST-MODE"));
-		gSceneMng.ChangeLevel(EDDSceneState::Test);
-	}
-	else
-#endif
-	{
-	}
 }
 
 void UDDRootInstance::InitSingletons()
 {
-	Singletons.Emplace(UDDUnitManager::MakeInstance());
-	Singletons.Emplace(UDDTableManager::MakeInstance());
-	Singletons.Emplace(UDDSceneManager::MakeInstance());
 }
 
 void UDDRootInstance::ShutdownSingletons()
 {
-	UDDSceneManager::RemoveInstance();
-	UDDTableManager::RemoveInstance();
-	UDDUnitManager::RemoveInstance();
 }

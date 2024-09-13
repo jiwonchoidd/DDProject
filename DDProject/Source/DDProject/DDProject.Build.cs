@@ -8,6 +8,16 @@ public class DDProject : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
+		if (Target.bBuildEditor == true)
+		{
+			PublicDependencyModuleNames.AddRange(new string[]
+			{
+				"EditorScriptingUtilities",
+				"UnrealEd",
+				"DesktopPlatform",
+				"MessageLog"
+			});
+		}
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "DDFundamental" });

@@ -4,22 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "DDFundamental/Struct/DDSingleton.h"
+#include "DDFundamental/Struct/DDStateMachine.h"
 #include "UObject/Object.h"
 #include "DDSceneManager.generated.h"
 
 /**
  * 
  */
-UENUM()
-enum class EDDSceneState : uint8
-{
-	None,
-	Logo,
-	Login,
-	Lobby,
-	Test,
-	Max = 0xff
-};
 
 UCLASS()
 class DDFUNDAMENTAL_API UDDSceneManager : public UObject, public DDSingleton<UDDSceneManager>
@@ -32,11 +23,33 @@ protected:
 
 	virtual void Tick(float _DeltaTime) override;
 public:
-	void ChangeLevel(EDDSceneState _SceneState) const;
+	template <typename T, typename = typename TEnableIf<TIsEnum<T>::Value>::Type>
+	void ChangeScene(T _SceneState) const;
 
+	template <typename T, typename = typename TEnableIf<TIsEnum<T>::Value>::Type>
+	void AddScene(T _Enum, TSubclassOf<UDDBaseState> _SceneType);
 private:
 	UPROPERTY()
-	class UDDState* SceneState = nullptr;
+	class UDDStateMachine* SceneState = nullptr;
 };
+
+template <typename T, typename>
+void UDDSceneManager::ChangeScene(T _SceneState) const
+{
+	if(SceneState)
+	{
+		SceneState->SetState(static_cast<uint8>(_SceneState));
+	}
+}
+
+template <typename T, typename>
+void UDDSceneManager::AddScene(T _Enum, TSubclassOf<UDDBaseState> _SceneType)
+{
+	const uint8 Idx = static_cast<uint8>(_Enum);
+	if(SceneState)
+	{
+		SceneState->AddState(Idx, _SceneType, this);
+	}
+}
 
 #define gSceneMng (*UDDSceneManager::GetInstance())

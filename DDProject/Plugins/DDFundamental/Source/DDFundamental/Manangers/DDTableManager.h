@@ -12,20 +12,21 @@ class DDFUNDAMENTAL_API UDDTableManager : public UObject, public DDSingleton<UDD
 {
 	GENERATED_BODY()
 
-protected: 
+protected:
 	virtual void Initialize() override;
 	virtual void Finalize() override;
 
 public:
-	void				LoadDataTable(const UEnum* _pEnum);
-	template <typename T, typename = typename TEnableIf<TIsEnum<T>::Value>::Type>
-	class UDataTable*	GetTableData(T _Enum);
+	void LoadDataTable(const FString& _BaseTablePath, const UEnum* _pEnum, bool _bAsyncLoad = false);
 	
-	FORCEINLINE int32	GetLoadCounter() const { return LoadCounter; }
+	template <class FRowData, typename T, typename = typename TEnableIf<TIsEnum<T>::Value>::Type>
+	const FRowData* GetRowData(T _Enum, int32 _RowId);
+	
+	FORCEINLINE int32 GetLoadCounter() const { return LoadCounter; }
 private:
-	void					OnLoadComplete(const UEnum* _pEnum, const TArray<FSoftObjectPath>& _LoadedSof);
-	TArray<FSoftObjectPath> GetTableSofPaths(const UEnum* _pEnum) const;
-	
+	void OnLoadComplete(const UEnum* _pEnum, const TArray<FSoftObjectPath>& _LoadedSof);
+	TArray<FSoftObjectPath> GetTableSofPaths(const FString& _BaseTablePath, const UEnum* _pEnum) const;
+
 private:
 	UPROPERTY()
 	TMap<uint8, class UDataTable*> mapTables;
@@ -33,4 +34,20 @@ private:
 	int32 LoadCounter = 0;
 };
 
-#define gTable (*UDDTableManager::GetInstance())
+template <class FRowData, typename T, typename>
+const FRowData* UDDTableManager::GetRowData(T _Enum, int32 _RowId)
+{
+	static_assert(std::is_base_of_v<FTableRowBase, FRowData>, "FRowData must inherit from FTableRowBase");
+
+	const uint8 Index = static_cast<uint8>(_Enum);
+
+	if (mapTables.Contains(Index))
+	{
+		const UDataTable* pTable = mapTables[Index];
+		FTableRowBase* RowBase = pTable->FindRow<FTableRowBase>(FName(FString::FromInt(_RowId)), TEXT("GENERAL"));
+		return static_cast<FRowData*>(RowBase);
+	}
+	return nullptr;
+}
+
+#define gTableMng (*UDDTableManager::GetInstance())

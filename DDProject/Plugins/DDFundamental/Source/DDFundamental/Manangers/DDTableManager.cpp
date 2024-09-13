@@ -6,11 +6,6 @@
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "DDFundamental/Gameplay/DDFunctionLibrary.h"
 
-namespace TableMng
-{
-	FString BaseTablePath = TEXT("/Game/Table");
-}
-
 void UDDTableManager::Initialize()
 {
 	mapTables.Reset();
@@ -29,33 +24,31 @@ void UDDTableManager::Finalize()
 	mapTables.Reset();
 }
 
-void UDDTableManager::LoadDataTable(const UEnum* _pEnum)
+void UDDTableManager::LoadDataTable(const FString& _BaseTablePath, const UEnum* _pEnum, bool _bAsyncLoad /* = false */)
 {
-	TArray<FSoftObjectPath> Paths = GetTableSofPaths(_pEnum);
-
-	TWeakObjectPtr<UDDTableManager> WeakThis(this);
-	UDDFunctionLibrary::AsyncLoadAsset(Paths, [WeakThis, Paths, _pEnum]
+	TArray<FSoftObjectPath> Paths = GetTableSofPaths(_BaseTablePath, _pEnum);
+	
+	if(!_bAsyncLoad)
 	{
-		if(WeakThis.IsValid() && IsValid(_pEnum))
+		UDDFunctionLibrary::SyncLoadAsset(Paths);
+		OnLoadComplete(_pEnum, Paths);
+	}
+	else // 비동기 로드
+	{
+		TWeakObjectPtr<UDDTableManager> WeakThis(this);
+		UDDFunctionLibrary::AsyncLoadAsset(Paths, [WeakThis, Paths, _pEnum]
 		{
-			WeakThis->OnLoadComplete(_pEnum, Paths);
-		}
-	});
+			if (WeakThis.IsValid() && IsValid(_pEnum))
+			{
+				WeakThis->OnLoadComplete(_pEnum, Paths);
+			}
+		});
+	}
 }
 
 // --------------------------------------------------------------------------------
 
-template <typename T, typename>
-UDataTable* UDDTableManager::GetTableData(T _Enum)
-{
-	const uint8 Index = static_cast<uint8>(_Enum);
 
-	if(mapTables.Contains(Index))
-	{
-		return mapTables[Index];
-	}
-	return nullptr;
-}
 
 // --------------------------------------------------------------------------------
 
@@ -65,7 +58,7 @@ void UDDTableManager::OnLoadComplete(const UEnum* _pEnum, const TArray<FSoftObje
 	{
 		FString AssetName = FPaths::GetBaseFilename(Sof.GetAssetName());
 		
-		const int64 Index = _pEnum->GetIndexByName(FName(AssetName));
+		const uint8 Index = _pEnum->GetIndexByName(FName(AssetName));
 		if (Index == INDEX_NONE)
 		{
 			continue;
@@ -80,13 +73,13 @@ void UDDTableManager::OnLoadComplete(const UEnum* _pEnum, const TArray<FSoftObje
 	LoadCounter++;
 }
 
-TArray<FSoftObjectPath> UDDTableManager::GetTableSofPaths(const UEnum* _pEnum) const
+TArray<FSoftObjectPath> UDDTableManager::GetTableSofPaths(const FString& _BaseTablePath, const UEnum* _pEnum) const
 {
 	const FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
 	//AssetRegistryModule.Get().ScanPathsSynchronous({TablePath});
 
 	FARFilter Filter;
-	Filter.PackagePaths.Add(FName(TableMng::BaseTablePath));
+	Filter.PackagePaths.Add(FName(_BaseTablePath));
 	Filter.ClassPaths.Add(UDataTable::StaticClass()->GetClassPathName());
 
 	TArray<FAssetData> arrAssetData;

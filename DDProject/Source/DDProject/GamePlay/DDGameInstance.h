@@ -15,6 +15,8 @@ class DDPROJECT_API UDDGameInstance : public UDDRootInstance
 	GENERATED_BODY()
 
 private:
+	virtual void Init() override;
 	virtual void InitSingletons() override;
 	virtual void ShutdownSingletons() override;
+	virtual void OnWorldBeginPlay() override;
 };

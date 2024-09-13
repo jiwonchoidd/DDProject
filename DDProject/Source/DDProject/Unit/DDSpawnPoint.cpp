@@ -3,10 +3,13 @@
 
 #include "DDSpawnPoint.h"
 
-#include "DDUnitBase.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BillboardComponent.h"
+#include "DDFundamental/Manangers/DDTableManager.h"
 #include "DDFundamental/Manangers/DDUnitManager.h"
+#include "DDFundamental/Unit/DDUnitBase.h"
+#include "DDProject/GamePlay/GameDefine.h"
+#include "DDProject/Table/RowHeader/UnitResource.h"
 
 
 ADDSpawnPoint::ADDSpawnPoint()
@@ -61,16 +64,22 @@ void ADDSpawnPoint::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FDDSpawnCommand SC;
-	SC.Pos = GetActorLocation();
-	SC.Rot = GetActorRotation();
-	SC.AssetPath = TEXT("/Script/Engine.Blueprint'/Game/Unit/BP_CharBase.BP_CharBase'");
-	
-	if(const UDDUnitBase* UnitBase = gUnitMng.CreateUnit(UDDUnitBase::StaticClass(), SC))
+	if(SpawnOption.UnitTableId == 0)
+		return;
+
+	if(const FUnitResource* UnitResource = gTableMng.GetRowData<FUnitResource>(ETableType::UnitResource, SpawnOption.UnitTableId))
 	{
+		FDDSpawnCommand SC;
+		SC.Pos = GetActorLocation();
+		SC.Rot = GetActorRotation();
+		//UnitResource->Mesh;
+	
+		if(const UDDUnitBase* UnitBase = gUnitMng.CreateUnit(UDDUnitBase::StaticClass(), SC))
+		{
 #if WITH_EDITOR
-		UE_LOG(LogTemp, Log, TEXT("Spawn Point : %d"), UnitBase->GetUnitHandle());
+			UE_LOG(LogTemp, Log, TEXT("Spawn Point : %d"), UnitBase->GetUnitHandle());
 #endif
+		}
 	}
 }
 
