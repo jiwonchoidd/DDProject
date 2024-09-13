@@ -21,5 +21,5 @@ void print_time()
 
     std::tm* localTime = std::localtime(&currentTime);
 
-    std::cout << std::put_time(localTime, "%Y³â %m¿ù %dÀÏ %H½Ã %MºÐ %SÃÊ") << std::endl;
+    std::cout << std::put_time(localTime, "%Yë…„ %mì›” %dì¼ %Hì‹œ %Më¶„ %Sì´ˆ") << std::endl;
 }
