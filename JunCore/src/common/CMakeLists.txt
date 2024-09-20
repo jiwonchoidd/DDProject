@@ -1,7 +1,8 @@
 ﻿add_library(common
-Common.h
-Common.cpp
-Define.h
+ "Common.h"
+ "Common.cpp"
+ "Define.h"
+ "Utilities/MessageBuffer.h"
 )
 
 target_include_directories(common 

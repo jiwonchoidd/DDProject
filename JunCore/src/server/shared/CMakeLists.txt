@@ -3,7 +3,8 @@ find_package(Boost REQUIRED)
 
 # shared 라이브러리 정의
 add_library(shared 
-Packets/ByteBuffer.cpp
+"Packets/ByteBuffer.cpp"
+"Networking/Socket.h"
 "Networking/SocketMgr.h"
 )
 

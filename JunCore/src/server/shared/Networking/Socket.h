@@ -1,27 +1,19 @@
+#ifndef __SOCKET_H__
+#define __SOCKET_H__
+
 #include <Define.h>
 #include <vector>
 #include <queue>
 #include <atomic>
 #include <boost/asio/ip/tcp.hpp>
+#include "Utilities/MessageBuffer.h"
 
 using boost::asio::ip::tcp;
 
-struct MessageBuffer
-{
-	using storage	= std::vector<uint8>;
-	using size_type = std::vector<uint8>::size_type;
-
-public:
-	MessageBuffer() : _wpos(0), _rpos(0), _storage()
-	{
-		_storage.resize(4096);
-	}
-
-private:
-	size_type _wpos;
-	size_type _rpos;
-	storage _storage;
-};
+#define READ_BLOCK_SIZE 4096
+#ifdef BOOST_ASIO_HAS_IOCP
+#define TC_SOCKET_USE_IOCP
+#endif
 
 template<class T>
 class Socket : public std::enable_shared_from_this<T>
@@ -32,6 +24,25 @@ public:
 	{
 		_readBuffer.Resize(READ_BLOCK_SIZE);
 	}
+
+	virtual void Start() = 0;
+
+	virtual bool Update()
+	{
+		if (_closed)
+			return false;
+
+#ifndef TC_SOCKET_USE_IOCP
+		if (_isWritingAsync || (_writeQueue.empty() && !_closing))
+			return true;
+
+		for (; HandleQueue();)
+			;
+#endif
+
+		return true;
+	}
+
 
 private:
 	tcp::socket _socket;
@@ -47,3 +58,5 @@ private:
 
 	bool _isWritingAsync;
 };
+
+#endif
