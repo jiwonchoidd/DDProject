@@ -1,11 +1,11 @@
 #ifndef __WORLDSOCKETMGR_H
 #define __WORLDSOCKETMGR_H
 
-#include "SocketMgr.h"
+#include <Networking/SocketMgr.h>
 
 class WorldSocket;
 
-class TC_GAME_API WorldSocketMgr : public SocketMgr<WorldSocket>
+class WorldSocketMgr : public SocketMgr<WorldSocket>
 {
 	using BaseSocketMgr = SocketMgr<WorldSocket>;
 

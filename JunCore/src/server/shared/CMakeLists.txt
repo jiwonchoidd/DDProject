@@ -3,10 +3,11 @@ find_package(Boost REQUIRED)
 
 # shared 라이브러리 정의
 add_library(shared 
-"Packets/ByteBuffer.cpp"
-"Networking/Socket.h"
-"Networking/SocketMgr.h"
-)
+ "Packets/ByteBuffer.cpp"
+ "Networking/Socket.h"
+ "Networking/SocketMgr.h"
+ "Networking/NetworkThread.h"
+ "Networking/AsyncAcceptor.h")
 
 # shared.lib에 해당 디렉터리들을 포함한다.
 # PUBLIC : shared.lib를 사용하는 프로젝트에도 포함된다. (ex. worldserver/main.cpp 에서 #include<Networking/...> 의 접근이 가능해진다.)
