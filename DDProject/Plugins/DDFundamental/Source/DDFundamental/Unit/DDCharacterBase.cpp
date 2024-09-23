@@ -18,21 +18,6 @@ ADDCharacterBase::ADDCharacterBase()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->bOrientRotationToMovement = true; // 유닛 이동 시 회전
-	//Camera
-	SpringArm_Cam = CreateDefaultSubobject<USpringArmComponent>(TEXT("SA_Cam"));
-	SpringArm_Cam->SetupAttachment(RootComponent, NAME_None);
-	SpringArm_Cam->TargetArmLength = 500.f;
-
-	SpringArm_Cam->bEnableCameraRotationLag = true;
-	SpringArm_Cam->CameraRotationLagSpeed = 25.f;
-	SpringArm_Cam->bUsePawnControlRotation = true;
-	SpringArm_Cam->bInheritPitch = true;
-	SpringArm_Cam->bInheritYaw = true;
-	SpringArm_Cam->bInheritRoll = true;
-
-	BaseCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	BaseCamera->SetupAttachment(SpringArm_Cam, NAME_None);
-	BaseCamera->SetFieldOfView(90.f);
 
 	//GetMesh()->SetupAttachment(SpringArm_Cam);
 }

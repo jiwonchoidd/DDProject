@@ -38,7 +38,6 @@ public:
 	TWeakObjectPtr<class UDDUnitBase> GetUnit(DDHandle _Handle);
 private:
 	class UDDUnitBase* CreateUnit_Internal(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _Command);
-	void Test();
 private:
 	TMap<DDHandle, class UDDUnitBase*> UnitContainer;
 };

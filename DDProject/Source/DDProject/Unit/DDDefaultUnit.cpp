@@ -7,9 +7,5 @@ bool UDDDefaultUnit::CreateUnit(int32 _Handle, const FDDSpawnCommand& _Command)
 {
 	const bool bCreate = Super::CreateUnit(_Handle, _Command);
 
-	if(bCreate)
-	{
-		
-	}
 	return bCreate;
 }

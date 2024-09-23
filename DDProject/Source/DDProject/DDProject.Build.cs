@@ -12,7 +12,6 @@ public class DDProject : ModuleRules
 		{
 			PublicDependencyModuleNames.AddRange(new string[]
 			{
-				"EditorScriptingUtilities",
 				"UnrealEd",
 				"DesktopPlatform",
 				"MessageLog"

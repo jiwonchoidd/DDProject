@@ -18,9 +18,5 @@ public:
 	void TryAttack();
 	void TryAiming() const;
 	virtual void Jump() override;
-private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UCameraComponent>		BaseCamera = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class USpringArmComponent>	SpringArm_Cam = nullptr;
+
 };

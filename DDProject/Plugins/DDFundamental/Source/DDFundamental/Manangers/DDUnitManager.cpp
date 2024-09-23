@@ -53,30 +53,3 @@ UDDUnitBase* UDDUnitManager::CreateUnit_Internal(const TSubclassOf<UDDUnitBase>&
 	UnitContainer.Add(NextHandle++, pUnit);
 	return pUnit;
 }
-
-void UDDUnitManager::Test()
-{
-	/*UObject* pObj = _Command.Sop.ResolveObject();
-	if (!IsValid(pObj))
-		return false;
-
-	const UBlueprint* pBp = Cast<UBlueprint>(pObj);
-	ADDCharacterBase* SpawnActor = nullptr;
-	if (pBp->GeneratedClass->IsChildOf(ADDCharacterBase::StaticClass()))
-	{
-		if (UWorld* pWorld = UDDRootInstance::RootInstance->GetWorld())
-		{
-			SpawnActor = Cast<ADDCharacterBase>(gLoader.SpawnActor(
-				pBp->GeneratedClass, pWorld,
-				_Command.Pos, _Command.Rot,
-				TEXT("UnitActor"),
-				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn));
-		}
-	}
-	if (SpawnActor == nullptr)
-		return false;
-
-	UnitActor = SpawnActor;
-	Handle = _Handle;
-	return true;*/
-}
