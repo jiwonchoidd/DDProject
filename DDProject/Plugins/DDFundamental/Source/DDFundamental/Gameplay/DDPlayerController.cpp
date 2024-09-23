@@ -49,11 +49,14 @@ ADDPlayerController::ADDPlayerController()
 	{
 		InputAttack = AttackIAFinder.Object;
 	}
+
+	// OnPossess 시 자동 액터 카메라 활성화
+	bAutoManageActiveCameraTarget = true;
 }
 
-void ADDPlayerController::OnPossess(APawn* InPawn)
+void ADDPlayerController::OnPossess(APawn* _Pawn)
 {
-	Super::OnPossess(InPawn);
+	Super::OnPossess(_Pawn);
 }
 
 void ADDPlayerController::BeginPlay()

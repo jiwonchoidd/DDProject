@@ -36,8 +36,8 @@ void UDDTestScene::Begin()
 			return;
 		}
 
-		APawn* UnitActor = UnitBase->GetUnitActor().Get();
-		if (UnitActor == nullptr)
+		TWeakObjectPtr<ADDCharacterBase> UnitActor = UnitBase->GetUnitActor();
+		if (!UnitActor.IsValid())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("UnitActor is null"));
 			return;
@@ -48,13 +48,10 @@ void UDDTestScene::Begin()
 				SC.Pos, SC.Rot,
 				TEXT("UnitCam"),
 				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn));
-
 		
-		PC->OnPossess(UnitActor);
+		PC->OnPossess(UnitActor.Get());
+		
 		UE_LOG(LogTemp, Log, TEXT("PlayerController possessed the UnitActor"));
-
-		PC->SetViewTargetWithBlend(pTestCam, 1.f);
-
 	}
 }
 

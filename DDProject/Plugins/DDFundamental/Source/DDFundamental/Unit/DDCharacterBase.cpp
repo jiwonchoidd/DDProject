@@ -19,12 +19,30 @@ ADDCharacterBase::ADDCharacterBase()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->bOrientRotationToMovement = true; // 유닛 이동 시 회전
 
-	//GetMesh()->SetupAttachment(SpringArm_Cam);
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SA_Cam"));
+	SpringArm->SetupAttachment(RootComponent, NAME_None);
+	SpringArm->TargetArmLength = 500.f;
+
+	SpringArm->bEnableCameraRotationLag = true;
+	SpringArm->CameraRotationLagSpeed = 25.f;
+	SpringArm->bUsePawnControlRotation = true;
+	SpringArm->bInheritPitch = true;
+	SpringArm->bInheritYaw = true;
+	SpringArm->bInheritRoll = true;
+
+	BaseCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	BaseCamera->SetupAttachment(SpringArm, NAME_None);
+	BaseCamera->SetFieldOfView(90.f);
 }
 
 void ADDCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void ADDCharacterBase::TickActor(float DeltaTime, ELevelTick TickType, FActorTickFunction& ThisTickFunction)
+{
+	Super::TickActor(DeltaTime, TickType, ThisTickFunction);
 }
 
 void ADDCharacterBase::TryAttack()

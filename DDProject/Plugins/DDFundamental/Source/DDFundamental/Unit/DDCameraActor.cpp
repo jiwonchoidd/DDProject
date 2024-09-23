@@ -8,14 +8,13 @@
 
 ADDCameraActor::ADDCameraActor()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	RootComponent = SceneComponent;
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SA_Cam"));
 	SpringArm->SetupAttachment(RootComponent);
-
 
 	SpringArm->TargetArmLength = 500.f;
 
@@ -29,17 +28,9 @@ ADDCameraActor::ADDCameraActor()
 	BaseCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	BaseCamera->SetupAttachment(SpringArm);
 	BaseCamera->SetFieldOfView(90.f);
-	BaseCamera->bConstrainAspectRatio = true;
-	BaseCamera->AspectRatio = 1.777778f;
 }
 
 void ADDCameraActor::BeginPlay()
 {
 	Super::BeginPlay();
 }
-
-void ADDCameraActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
