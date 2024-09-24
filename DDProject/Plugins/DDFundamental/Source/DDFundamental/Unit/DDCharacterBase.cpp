@@ -1,5 +1,6 @@
 ﻿#include "DDCharacterBase.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -19,6 +20,18 @@ ADDCharacterBase::ADDCharacterBase()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->bOrientRotationToMovement = true; // 유닛 이동 시 회전
 
+	RangeBound = CreateDefaultSubobject<USphereComponent>("VisibleTestBound");
+	if (RangeBound)
+	{
+		RangeBound->SetSphereRadius(500.0f);
+		RangeBound->SetGenerateOverlapEvents(true);
+		RangeBound->SetEnableGravity(false);
+		RangeBound->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		RangeBound->SetCollisionProfileName(TEXT("QueryOnly"));
+		RangeBound->SetupAttachment(RootComponent);
+		GetMesh()->SetupAttachment(RangeBound);
+	}
+	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SA_Cam"));
 	SpringArm->SetupAttachment(RootComponent, NAME_None);
 	SpringArm->TargetArmLength = 500.f;
@@ -35,25 +48,31 @@ ADDCharacterBase::ADDCharacterBase()
 	BaseCamera->SetFieldOfView(90.f);
 }
 
-void ADDCharacterBase::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 void ADDCharacterBase::TickActor(float DeltaTime, ELevelTick TickType, FActorTickFunction& ThisTickFunction)
 {
 	Super::TickActor(DeltaTime, TickType, ThisTickFunction);
 }
 
-void ADDCharacterBase::TryAttack()
+void ADDCharacterBase::Initialize(UObject* _CreatedObject)
 {
+	RangeBound->OnComponentBeginOverlap.Clear();
+	RangeBound->OnComponentEndOverlap.Clear();
+	SourceObject = _CreatedObject;
 }
 
-void ADDCharacterBase::TryAiming() const
+void ADDCharacterBase::Finalize()
 {
+	RangeBound->OnComponentBeginOverlap.Clear();
+	RangeBound->OnComponentEndOverlap.Clear();
+	SourceObject.Reset();
 }
 
-void ADDCharacterBase::Jump()
+FComponentBeginOverlapSignature& ADDCharacterBase::GetBeginOverlapSignature() const
 {
-	Super::Jump();
+	return RangeBound->OnComponentBeginOverlap;
+}
+
+FComponentEndOverlapSignature& ADDCharacterBase::GetEndOverlapSignature() const
+{
+	return RangeBound->OnComponentEndOverlap;
 }

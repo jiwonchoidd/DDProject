@@ -7,6 +7,7 @@
 #include "DDFundamental/Gameplay/DDFunctionLibrary.h"
 #include "DDFundamental/Gameplay/DDRootInstance.h"
 #include "DDFundamental/Manangers/DDUnitManager.h"
+#include "UnitFunction/DDInteractionController.h"
 
 bool UDDUnitBase::CreateUnit(int32 _Handle, const FDDSpawnCommand& _Command)
 {
@@ -33,6 +34,33 @@ bool UDDUnitBase::CreateUnit(int32 _Handle, const FDDSpawnCommand& _Command)
 		return false;
 
 	UnitActor = SpawnActor;
+	UnitActor->Initialize(this);
 	Handle = _Handle;
+
+	Interact = NewObject<UDDInteractionController>(this);
+	Interact->AddToRoot();
+	Interact->Initialize();
 	return true;
+}
+
+bool UDDUnitBase::DestroyUnit()
+{
+	Interact->Finalize();
+	Interact->RemoveFromRoot();
+	Interact->MarkAsGarbage();
+	Interact = nullptr;
+	
+	UnitActor->Finalize();
+	GDDInstance->GetWorld()->DestroyActor(UnitActor.Get());
+	UnitActor.Reset();
+	Handle = INDEX_NONE;
+	return true;
+}
+
+void UDDUnitBase::Jump() const
+{
+	if(UnitActor.IsValid())
+	{
+		UnitActor->Jump();
+	}
 }

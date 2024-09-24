@@ -30,6 +30,24 @@ UDDUnitBase* UDDUnitManager::CreateUnit(const TSubclassOf<UDDUnitBase>& _UnitTyp
 	return CreateUnit_Internal(_UnitType, _SpawnCommand);
 }
 
+bool UDDUnitManager::DestroyUnit(DDHandle _UnitHandle)
+{
+	if(UnitContainer.Contains(_UnitHandle))
+	{
+		UDDUnitBase* pUnit = UnitContainer[_UnitHandle];
+		if (pUnit != nullptr)
+		{
+			pUnit->DestroyUnit();
+			pUnit->RemoveFromRoot();
+			pUnit->MarkAsGarbage();
+			pUnit = nullptr;
+			UnitContainer.Remove(_UnitHandle);
+			return true;
+		}
+	}
+	return false;
+}
+
 TWeakObjectPtr<UDDUnitBase> UDDUnitManager::GetUnit(DDHandle _Handle)
 {
 	if(UnitContainer.Contains(_Handle))

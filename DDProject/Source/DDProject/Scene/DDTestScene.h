@@ -18,4 +18,7 @@ private:
 	virtual void Begin() override;
 	virtual void Tick(float _fDeltaTime) override;
 	virtual void Exit() override;
+
+private:
+	int32 PlayerHandle = INDEX_NONE;
 };

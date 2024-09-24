@@ -35,6 +35,7 @@ protected:
 	
 public:
 	class UDDUnitBase* CreateUnit(const TSubclassOf<class UDDUnitBase>& _UnitType, const FDDSpawnCommand& _SpawnCommand);
+	bool DestroyUnit(DDHandle _UnitHandle);
 	TWeakObjectPtr<class UDDUnitBase> GetUnit(DDHandle _Handle);
 private:
 	class UDDUnitBase* CreateUnit_Internal(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _Command);
