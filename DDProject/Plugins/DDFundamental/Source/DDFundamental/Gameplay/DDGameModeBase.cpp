@@ -1,7 +1,7 @@
 ﻿#include "DDGameModeBase.h"
 
 #include "DDPlayerController.h"
-#include "DDFundamental/Unit/DDCharacterBase.h"
+#include "DDFundamental/Unit/DDBaseCharacter.h"
 
 // Sets default values
 ADDGameModeBase::ADDGameModeBase()

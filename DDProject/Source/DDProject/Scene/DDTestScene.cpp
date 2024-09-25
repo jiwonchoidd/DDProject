@@ -1,50 +1,38 @@
 #include "DDTestScene.h"
 
-#include "DDFundamental/Gameplay/DDPlayerController.h"
 #include "DDFundamental/Gameplay/DDRootInstance.h"
+#include "DDFundamental/Manangers/DDTableManager.h"
 #include "DDFundamental/Manangers/DDUnitManager.h"
-#include "DDFundamental/Unit/DDCharacterBase.h"
-#include "DDFundamental/Unit/DDUnitBase.h"
-#include "DDProject/Unit/DDPlayerUnit.h"
-#include "Kismet/GameplayStatics.h"
+#include "DDFundamental/Unit/DDBaseCharacter.h"
+#include "DDProject/GamePlay/GameDefine.h"
+#include "DDProject/Table/RowHeader/BPResource.h"
+#include "DDProject/Unit/DDPlayer.h"
 
 void UDDTestScene::Begin()
 {
 	Super::Begin();
 
-	FDDSpawnCommand SC;
-	SC.Pos = FVector(0, 0, 100);
-	SC.Rot = FRotator(0, 0, 0);
-	SC.AssetPath = TEXT("/Script/Engine.Blueprint'/Game/Unit/BP_CharBase.BP_CharBase'");
-
-	if (const UDDUnitBase* UnitBase = gUnitMng.CreateUnit(UDDPlayerUnit::StaticClass(), SC))
+	if(const FBPResource* pResource = gTableMng.GetRowData<FBPResource>(ETableType::BPResource, 1001))
 	{
-		PlayerHandle = UnitBase->GetUnitHandle();
-	}
+		FDDSpawnCommand Command;
+		Command.Pos = FVector(0, 0, 100);
+		Command.Rot = FRotator(0, 0, 0);
+		Command.AutoPossess = true;
+		Command.BPPath = pResource->Blueprint.ToSoftObjectPath();
 
-	const UWorld* World = GDDInstance->GetWorld();
-	if (World == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("World is null"));
-		return;
-	}
-	ADDPlayerController* PC = Cast<ADDPlayerController>(UGameplayStatics::GetPlayerController(World, 0));
-	if (PC == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerController is null"));
-		return;
-	}
+		UObject* d = Command.BPPath.ResolveObject();
+			
+		DDHandle hPlayer = gUnitMng.CreateActor(Command);
+		if (hPlayer != INDEX_NONE)
+		{
+			PlayerHandle = hPlayer;
+		}
 
-	const TWeakObjectPtr<ADDCharacterBase> UnitActor = gUnitMng.GetUnit(PlayerHandle)->GetUnitActor();
-	if (!UnitActor.IsValid())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UnitActor is null"));
-		return;
+		UE_LOG(LogTemp, Log, TEXT("PlayerController possessed the UnitActor"));
 	}
+		
 
-	PC->OnPossess(UnitActor.Get());
-
-	UE_LOG(LogTemp, Log, TEXT("PlayerController possessed the UnitActor"));
+	
 }
 
 void UDDTestScene::Tick(float _fDeltaTime)

@@ -1,12 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "DDUnitManager.h"
 
+#include "DDFundamental/Gameplay/DDFunctionLibrary.h"
+#include "DDFundamental/Gameplay/DDPlayerController.h"
 #include "DDFundamental/Gameplay/DDRootInstance.h"
-#include "DDFundamental/Unit/DDCharacterBase.h"
-#include "DDFundamental/Unit/DDUnitBase.h"
-
+#include "DDFundamental/Unit/DDBaseCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 DDHandle UDDUnitManager::NextHandle = 0;
 
@@ -22,25 +20,21 @@ void UDDUnitManager::Finalize()
 
 void UDDUnitManager::Tick(float _DeltaTime)
 {
-	
 }
 
-UDDUnitBase* UDDUnitManager::CreateUnit(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _SpawnCommand)
+DDHandle UDDUnitManager::CreateActor(const FDDSpawnCommand& _SpawnCommand)
 {
-	return CreateUnit_Internal(_UnitType, _SpawnCommand);
+	return CreateUnit_Internal(_SpawnCommand);
 }
 
 bool UDDUnitManager::DestroyUnit(DDHandle _UnitHandle)
 {
-	if(UnitContainer.Contains(_UnitHandle))
+	if (UnitContainer.Contains(_UnitHandle))
 	{
-		UDDUnitBase* pUnit = UnitContainer[_UnitHandle];
-		if (pUnit != nullptr)
+		TWeakObjectPtr<ADDBaseCharacter> pUnit = UnitContainer[_UnitHandle];
+		if (pUnit.IsValid() && GDDInstance->GetWorld()->DestroyActor(pUnit.Get()))
 		{
-			pUnit->DestroyUnit();
-			pUnit->RemoveFromRoot();
-			pUnit->MarkAsGarbage();
-			pUnit = nullptr;
+			pUnit.Reset();
 			UnitContainer.Remove(_UnitHandle);
 			return true;
 		}
@@ -48,26 +42,75 @@ bool UDDUnitManager::DestroyUnit(DDHandle _UnitHandle)
 	return false;
 }
 
-TWeakObjectPtr<UDDUnitBase> UDDUnitManager::GetUnit(DDHandle _Handle)
+TWeakObjectPtr<ADDBaseCharacter> UDDUnitManager::GetUnitActor(DDHandle _Handle)
 {
-	if(UnitContainer.Contains(_Handle))
+	if (UnitContainer.Contains(_Handle))
 	{
 		return UnitContainer[_Handle];
 	}
 	return nullptr;
 }
 
-UDDUnitBase* UDDUnitManager::CreateUnit_Internal(const TSubclassOf<UDDUnitBase>& _UnitType,
-                                                 const FDDSpawnCommand& _Command)
+bool UDDUnitManager::TryPossess(DDHandle _UnitHandle)
 {
-	UDDUnitBase* pUnit = NewObject<UDDUnitBase>(this, _UnitType);
-	pUnit->AddToRoot();
-	if (!pUnit->CreateUnit(NextHandle, _Command))
+	const UWorld* World = GDDInstance->GetWorld();
+	if (World == nullptr)
 	{
-		pUnit->RemoveFromRoot();
-		pUnit = nullptr;
-		return nullptr;
+		UE_LOG(LogTemp, Warning, TEXT("World is null"));
+		return false;
 	}
-	UnitContainer.Add(NextHandle++, pUnit);
-	return pUnit;
+
+	const TWeakObjectPtr<ADDBaseCharacter> UnitActor = GetUnitActor(_UnitHandle);
+	if (!UnitActor.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UnitActor is null"));
+		return false;
+	}
+
+	ADDPlayerController* PC = Cast<ADDPlayerController>(UGameplayStatics::GetPlayerController(World, 0));
+	if (PC == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController is null"));
+		return false;
+	}
+	PC->OnPossess(UnitActor.Get());
+	return true;
+}
+
+DDHandle UDDUnitManager::CreateUnit_Internal(const FDDSpawnCommand& _Command)
+{
+	const UBlueprint* pBP = Cast<UBlueprint>(UDDFunctionLibrary::SyncLoadAsset(_Command.BPPath));
+	if (!IsValid(pBP))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BP is null"));
+		return INDEX_NONE;
+	}
+
+	ADDBaseCharacter* SpawnActor = nullptr;
+	if (pBP->GeneratedClass->IsChildOf(ADDBaseCharacter::StaticClass()))
+	{
+		if (UWorld* pWorld = GDDInstance->GetWorld())
+		{
+			SpawnActor = Cast<ADDBaseCharacter>(UDDFunctionLibrary::SpawnActor(
+				pBP->GeneratedClass, pWorld,
+				_Command.Pos, _Command.Rot,
+				TEXT("UnitActor"),
+				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn));
+		}
+	}
+
+	if (SpawnActor != nullptr)
+	{
+		SpawnActor->Initialize(NextHandle);
+		
+		UnitContainer.Add(NextHandle, SpawnActor);
+
+		if(_Command.AutoPossess)
+		{
+			TryPossess(SpawnActor->GetHandle());
+		}
+
+		return NextHandle++;
+	}
+	return INDEX_NONE;
 }

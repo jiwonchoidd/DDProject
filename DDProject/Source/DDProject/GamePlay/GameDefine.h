@@ -3,7 +3,7 @@
 UENUM()
 enum class ETableType : uint8
 {
-	UnitResource = 0,
+	BPResource = 0,
 };
 
 UENUM()

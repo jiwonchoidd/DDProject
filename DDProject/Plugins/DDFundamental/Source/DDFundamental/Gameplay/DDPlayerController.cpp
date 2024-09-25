@@ -3,8 +3,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
-#include "DDFundamental/Unit/DDCharacterBase.h"
-#include "DDFundamental/Unit/DDUnitBase.h"
+#include "DDFundamental/Unit/DDBaseCharacter.h"
 #include "GameFramework/Character.h"
 
 ADDPlayerController::ADDPlayerController()
@@ -123,25 +122,20 @@ void ADDPlayerController::BaseLook(const FInputActionValue& _Value)
 void ADDPlayerController::BaseJump(const FInputActionValue& _Value)
 {
 	//const bool& Jump = _Value.Get<bool>();
-	const ADDCharacterBase* BaseChar = Cast<ADDCharacterBase>(GetCharacter());
+	ADDBaseCharacter* BaseChar = Cast<ADDBaseCharacter>(GetCharacter());
 	if(!IsValid(BaseChar))
 		return;
 
-	const TWeakObjectPtr<UDDUnitBase> UnitBase = Cast<UDDUnitBase>(BaseChar->GetSourceObject());
-	if(!UnitBase.IsValid())
-		return;
-
-	UnitBase->Jump();
+	if(BaseChar->CanJump())
+	{
+		BaseChar->Jump();
+	}
 }
 
 void ADDPlayerController::BaseAiming(const FInputActionValue& _Value)
 {
-	const ADDCharacterBase* BaseChar = Cast<ADDCharacterBase>(GetCharacter());
+	const ADDBaseCharacter* BaseChar = Cast<ADDBaseCharacter>(GetCharacter());
 	if(!IsValid(BaseChar))
-		return;
-
-	const TWeakObjectPtr<UDDUnitBase> UnitBase = Cast<UDDUnitBase>(BaseChar->GetSourceObject());
-	if(!UnitBase.IsValid())
 		return;
 	
 	//UnitBase->GetSourceObject()->TryAiming();
@@ -149,13 +143,9 @@ void ADDPlayerController::BaseAiming(const FInputActionValue& _Value)
 
 void ADDPlayerController::BaseAttack(const FInputActionValue& _Value)
 {
-	const ADDCharacterBase* BaseChar = Cast<ADDCharacterBase>(GetCharacter());
+	const ADDBaseCharacter* BaseChar = Cast<ADDBaseCharacter>(GetCharacter());
 	if(!IsValid(BaseChar))
 		return;
-
-	const TWeakObjectPtr<UDDUnitBase> UnitBase = Cast<UDDUnitBase>(BaseChar->GetSourceObject());
-	if(!UnitBase.IsValid())
-		return;
-
+	
 	//UnitBase->TryAttack();
 }

@@ -13,10 +13,10 @@
 
 struct FDDSpawnCommand
 {
-	FString AssetPath;
 	FVector Pos = FVector::ZeroVector;
 	FRotator Rot = FRotator::ZeroRotator;
-	int32 UnitTableId = 0;
+	FSoftObjectPath BPPath = FSoftObjectPath();
+	bool AutoPossess = false;
 };
 
 typedef int32 DDHandle;
@@ -34,13 +34,17 @@ protected:
 	virtual void Tick(float _DeltaTime) override;
 	
 public:
-	class UDDUnitBase* CreateUnit(const TSubclassOf<class UDDUnitBase>& _UnitType, const FDDSpawnCommand& _SpawnCommand);
-	bool DestroyUnit(DDHandle _UnitHandle);
-	TWeakObjectPtr<class UDDUnitBase> GetUnit(DDHandle _Handle);
+	DDHandle		CreateActor(const FDDSpawnCommand& _SpawnCommand);
+	bool			DestroyUnit(DDHandle _UnitHandle);
+	
+	TWeakObjectPtr<class ADDBaseCharacter> GetUnitActor(DDHandle _Handle);
+
+	bool TryPossess(DDHandle _UnitHandle);
 private:
-	class UDDUnitBase* CreateUnit_Internal(const TSubclassOf<UDDUnitBase>& _UnitType, const FDDSpawnCommand& _Command);
+	DDHandle CreateUnit_Internal(const FDDSpawnCommand& _Command);
 private:
-	TMap<DDHandle, class UDDUnitBase*> UnitContainer;
+	TMap<DDHandle, TWeakObjectPtr<ADDBaseCharacter>> UnitContainer;
+	DDHandle PlayerHandle = INDEX_NONE;
 };
 
 #define gUnitMng (*UDDUnitManager::GetInstance())
