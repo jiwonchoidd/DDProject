@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "DDFundamental/Unit/DDUnitBase.h"
-#include "DDDefaultUnit.generated.h"
+#include "UObject/Object.h"
+#include "DDNpcUnit.generated.h"
 
 /**
- * 
+ *  NPC
  */
 UCLASS()
-class DDPROJECT_API UDDDefaultUnit : public UDDUnitBase
+class DDPROJECT_API UDDNpcUnit : public UDDUnitBase
 {
 	GENERATED_BODY()
 
-public:
-	virtual bool CreateUnit(int32 _Handle, const FDDSpawnCommand& _Command) override;
-
 private:
-	// 상태, 스킬 등 독립적인 유닛 관련 컴포넌트 제작
+	virtual bool CreateUnit(int32 _Handle, const FDDSpawnCommand& _Command) override;
+	virtual bool DestroyUnit() override;
+private:
 };

@@ -5,7 +5,7 @@
 #include "DDFundamental/Manangers/DDUnitManager.h"
 #include "DDFundamental/Unit/DDCharacterBase.h"
 #include "DDFundamental/Unit/DDUnitBase.h"
-#include "DDProject/Unit/DDDefaultUnit.h"
+#include "DDProject/Unit/DDPlayerUnit.h"
 #include "Kismet/GameplayStatics.h"
 
 void UDDTestScene::Begin()
@@ -17,7 +17,7 @@ void UDDTestScene::Begin()
 	SC.Rot = FRotator(0, 0, 0);
 	SC.AssetPath = TEXT("/Script/Engine.Blueprint'/Game/Unit/BP_CharBase.BP_CharBase'");
 
-	if (const UDDUnitBase* UnitBase = gUnitMng.CreateUnit(UDDDefaultUnit::StaticClass(), SC))
+	if (const UDDUnitBase* UnitBase = gUnitMng.CreateUnit(UDDPlayerUnit::StaticClass(), SC))
 	{
 		PlayerHandle = UnitBase->GetUnitHandle();
 	}

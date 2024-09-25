@@ -19,18 +19,6 @@ ADDCharacterBase::ADDCharacterBase()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->bOrientRotationToMovement = true; // 유닛 이동 시 회전
-
-	RangeBound = CreateDefaultSubobject<USphereComponent>("VisibleTestBound");
-	if (RangeBound)
-	{
-		RangeBound->SetSphereRadius(500.0f);
-		RangeBound->SetGenerateOverlapEvents(true);
-		RangeBound->SetEnableGravity(false);
-		RangeBound->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		RangeBound->SetCollisionProfileName(TEXT("QueryOnly"));
-		RangeBound->SetupAttachment(RootComponent);
-		GetMesh()->SetupAttachment(RangeBound);
-	}
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SA_Cam"));
 	SpringArm->SetupAttachment(RootComponent, NAME_None);
@@ -48,31 +36,12 @@ ADDCharacterBase::ADDCharacterBase()
 	BaseCamera->SetFieldOfView(90.f);
 }
 
-void ADDCharacterBase::TickActor(float DeltaTime, ELevelTick TickType, FActorTickFunction& ThisTickFunction)
-{
-	Super::TickActor(DeltaTime, TickType, ThisTickFunction);
-}
-
 void ADDCharacterBase::Initialize(UObject* _CreatedObject)
 {
-	RangeBound->OnComponentBeginOverlap.Clear();
-	RangeBound->OnComponentEndOverlap.Clear();
 	SourceObject = _CreatedObject;
 }
 
 void ADDCharacterBase::Finalize()
 {
-	RangeBound->OnComponentBeginOverlap.Clear();
-	RangeBound->OnComponentEndOverlap.Clear();
 	SourceObject.Reset();
-}
-
-FComponentBeginOverlapSignature& ADDCharacterBase::GetBeginOverlapSignature() const
-{
-	return RangeBound->OnComponentBeginOverlap;
-}
-
-FComponentEndOverlapSignature& ADDCharacterBase::GetEndOverlapSignature() const
-{
-	return RangeBound->OnComponentEndOverlap;
 }

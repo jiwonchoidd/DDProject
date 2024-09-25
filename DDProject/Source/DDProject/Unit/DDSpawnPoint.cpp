@@ -3,6 +3,7 @@
 
 #include "DDSpawnPoint.h"
 
+#include "DDNpcUnit.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BillboardComponent.h"
 #include "DDFundamental/Manangers/DDTableManager.h"
@@ -57,7 +58,7 @@ ADDSpawnPoint::ADDSpawnPoint()
 		ArrowComponent->SetupAttachment(RootComponent);
 		ArrowComponent->SetUsingAbsoluteScale(true);
 	}
-#endif // WITH_EDITORONLY_DATA
+#endif
 }
 
 void ADDSpawnPoint::BeginPlay()
@@ -74,7 +75,7 @@ void ADDSpawnPoint::BeginPlay()
 		SC.Rot = GetActorRotation();
 		SC.AssetPath = TEXT("/Script/Engine.Blueprint'/Game/Unit/BP_CharBase.BP_CharBase'");
 
-		if(const UDDUnitBase* UnitBase = gUnitMng.CreateUnit(UDDUnitBase::StaticClass(), SC))
+		if(const UDDUnitBase* UnitBase = gUnitMng.CreateUnit(UDDNpcUnit::StaticClass(), SC))
 		{
 #if WITH_EDITOR
 			UE_LOG(LogTemp, Log, TEXT("Spawn Point : %d"), UnitBase->GetUnitHandle());
@@ -82,9 +83,3 @@ void ADDSpawnPoint::BeginPlay()
 		}
 	}
 }
-
-void ADDSpawnPoint::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-

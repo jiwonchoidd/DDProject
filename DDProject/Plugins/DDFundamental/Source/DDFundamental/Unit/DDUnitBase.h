@@ -16,14 +16,11 @@ class DDFUNDAMENTAL_API UDDUnitBase : public UObject
 public:
 	virtual bool CreateUnit(int32 _Handle, const FDDSpawnCommand& _Command);
 	virtual bool DestroyUnit();
-	
+public:
 	FORCEINLINE int32 GetUnitHandle() const { return Handle; }
 	FORCEINLINE TWeakObjectPtr<class ADDCharacterBase> GetUnitActor() const { return UnitActor; }
 public:
 	void Jump() const;
-
-private:
-	TObjectPtr<class UDDInteractionController> Interact;
 private:
 	int32 Handle = 0;
 	TWeakObjectPtr<class ADDCharacterBase> UnitActor;
