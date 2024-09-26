@@ -19,4 +19,6 @@ private:
 	virtual void InitSingletons() override;
 	virtual void ShutdownSingletons() override;
 	virtual void OnWorldBeginPlay() override;
+
+	virtual void LoadComplete(const float LoadTime, const FString& MapName) override;
 };

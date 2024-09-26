@@ -10,4 +10,5 @@ UENUM()
 enum class ESceneType : uint8
 {
 	Test = 0,
+	Lobby = 1,
 };

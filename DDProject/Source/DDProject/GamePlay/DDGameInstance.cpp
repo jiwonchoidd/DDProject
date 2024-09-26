@@ -5,6 +5,7 @@
 #include "DDFundamental/Manangers/DDTableManager.h"
 #include "DDFundamental/Manangers/DDUnitManager.h"
 #include "DDProject/Manager/DDNetworkManager.h"
+#include "DDProject/Scene/DDLobbyScene.h"
 #include "DDProject/Scene/DDTestScene.h"
 
 void UDDGameInstance::Init()
@@ -13,6 +14,7 @@ void UDDGameInstance::Init()
 
 	gTableMng.LoadDataTable(TEXT("/Game/Table"), StaticEnum<ETableType>(), false);
 	gSceneMng.AddScene(ESceneType::Test, UDDTestScene::StaticClass());
+	gSceneMng.AddScene(ESceneType::Lobby, UDDLobbyScene::StaticClass());
 }
 
 void UDDGameInstance::InitSingletons()
@@ -51,4 +53,11 @@ void UDDGameInstance::OnWorldBeginPlay()
 #endif
 	{
 	}
+}
+
+void UDDGameInstance::LoadComplete(const float LoadTime, const FString& MapName)
+{
+	Super::LoadComplete(LoadTime, MapName);
+	
+	gSceneMng.LoadComplete();
 }

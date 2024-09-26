@@ -2,7 +2,7 @@
 
 #pragma once
 #include "CoreMinimal.h"
-#include "DDBaseState.generated.h"
+#include "DDStateBase.generated.h"
 
 /**
  * 
@@ -24,7 +24,7 @@ public:
 };
 
 UCLASS()
-class DDFUNDAMENTAL_API UDDBaseState : public UObject, public IStateBaseInterface
+class DDFUNDAMENTAL_API UDDStateBase : public UObject, public IStateBaseInterface
 {
 	GENERATED_BODY()
 

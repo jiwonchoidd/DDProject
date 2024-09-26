@@ -8,7 +8,7 @@ void UDDStateMachine::Create()
 
 void UDDStateMachine::Destroy()
 {
-	for (TTuple<uint8, UDDBaseState*>& State : mapState)
+	for (TTuple<uint8, UDDStateBase*>& State : mapState)
 	{
 		if (!IsValid(State.Value))
 			continue;
@@ -25,19 +25,19 @@ void UDDStateMachine::Tick(float _fDeltaTime)
 	if (ChangeStateID == -1)
 		return;
 
-	if (UDDBaseState* pCurrentState = GetStatePtr(CurrentStateID))
+	if (UDDStateBase* pCurrentState = GetStatePtr(CurrentStateID))
 	{
 		pCurrentState->OnTickState(_fDeltaTime);
 	}
 }
 
-void UDDStateMachine::AddState(uint8 _uiIndex, TSubclassOf<UDDBaseState> _SceneType, UObject* _pOuter)
+void UDDStateMachine::AddState(uint8 _uiIndex, TSubclassOf<UDDStateBase> _SceneType, UObject* _pOuter)
 {
 	if (mapState.Contains(_uiIndex))
 		return;
 
 	UObject* ParentObject = IsValid(_pOuter) ? _pOuter : nullptr;
-	if (UDDBaseState* StateBase = NewObject<UDDBaseState>(ParentObject, _SceneType))
+	if (UDDStateBase* StateBase = NewObject<UDDStateBase>(ParentObject, _SceneType))
 	{
 		StateBase->Initialize(_uiIndex);
 		mapState.Add(_uiIndex, StateBase);
@@ -49,11 +49,11 @@ void UDDStateMachine::SetState(uint8 _uiIndex, bool _bInstant)
 	SetState_Internal(_uiIndex);
 }
 
-UDDBaseState* UDDStateMachine::GetStatePtr(uint8 _nIndex)
+UDDStateBase* UDDStateMachine::GetStatePtr(uint8 _nIndex)
 {
 	if (mapState.Contains(_nIndex))
 	{
-		UDDBaseState* pStateBase = *mapState.Find(_nIndex);
+		UDDStateBase* pStateBase = *mapState.Find(_nIndex);
 		if (IsValid(pStateBase))
 		{
 			return pStateBase;
@@ -62,12 +62,12 @@ UDDBaseState* UDDStateMachine::GetStatePtr(uint8 _nIndex)
 	return nullptr;
 }
 
-UDDBaseState* UDDStateMachine::GetCurrentStatePtr()
+UDDStateBase* UDDStateMachine::GetCurrentStatePtr()
 {
 	return GetStatePtr(CurrentStateID);
 }
 
-UDDBaseState* UDDStateMachine::GetPreviousStatePtr()
+UDDStateBase* UDDStateMachine::GetPreviousStatePtr()
 {
 	return GetStatePtr(PreviousStateID);
 }
@@ -77,14 +77,14 @@ void UDDStateMachine::SetState_Internal(uint8 _nIndex)
 	ChangeStateID = -1;
 	PreviousStateID = CurrentStateID;
 
-	if (UDDBaseState* pCurrentState = GetStatePtr(CurrentStateID))
+	if (UDDStateBase* pCurrentState = GetStatePtr(CurrentStateID))
 	{
 		pCurrentState->OnExitState();
 	}
 
 	ChangeStateID = _nIndex;
 
-	if (UDDBaseState* pNextState = GetStatePtr(ChangeStateID))
+	if (UDDStateBase* pNextState = GetStatePtr(ChangeStateID))
 	{
 		pNextState->OnBeginState();
 	}

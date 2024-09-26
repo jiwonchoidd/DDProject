@@ -1,5 +1,5 @@
 #pragma once
-#include "DDFundamental/Struct/DDBaseState.h"
+#include "DDFundamental/Struct/DDStateBase.h"
 #include "DDStateMachine.generated.h"
 /**
  * 
@@ -15,7 +15,7 @@ public:
 	void Destroy();
 	void Tick(float _fDeltaTime);
 	
-	void AddState(uint8 _uiIndex, TSubclassOf<class UDDBaseState> _SceneType, UObject* _pOuter);
+	void AddState(uint8 _uiIndex, TSubclassOf<class UDDStateBase> _SceneType, UObject* _pOuter);
 
 	void SetState(uint8 _uiIndex, bool _bInstant = true);
 
@@ -23,17 +23,17 @@ public:
 	FORCEINLINE uint8 GetCurrentStateID() const { return CurrentStateID; }
 	FORCEINLINE uint8 GetChangeStateID() const { return ChangeStateID; }
 
-	class UDDBaseState* GetStatePtr(uint8 _nIndex);
-	class UDDBaseState* GetCurrentStatePtr();
-	class UDDBaseState* GetPreviousStatePtr();
+	class UDDStateBase* GetStatePtr(uint8 _nIndex);
+	class UDDStateBase* GetCurrentStatePtr();
+	class UDDStateBase* GetPreviousStatePtr();
 
 private:
 	void SetState_Internal(uint8 _nIndex);
 
 private:
-	uint8 PreviousStateID = 0;
-	uint8 CurrentStateID = 0;
-	uint8 ChangeStateID = 0;
+	uint8 PreviousStateID = -1;
+	uint8 CurrentStateID = -1;
+	uint8 ChangeStateID = -1;
 	UPROPERTY()
-	TMap<uint8, class UDDBaseState*> mapState;
+	TMap<uint8, class UDDStateBase*> mapState;
 };

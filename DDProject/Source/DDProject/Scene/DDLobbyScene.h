@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DDFundamental/Struct/DDBaseState.h"
+#include "DDFundamental/Struct/DDSceneBase.h"
 #include "DDLobbyScene.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UDDLobbyScene : public UDDBaseState
+class UDDLobbyScene : public UDDSceneBase
 {
 	GENERATED_BODY()
 
