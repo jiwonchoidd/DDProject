@@ -22,6 +22,8 @@ void UDDUnitManager::Tick(float _DeltaTime)
 {
 }
 
+//------------------------------------------------------------------------------------------
+
 DDHandle UDDUnitManager::CreateActor(const FDDSpawnCommand& _SpawnCommand)
 {
 	return CreateUnit_Internal(_SpawnCommand);
@@ -41,6 +43,8 @@ bool UDDUnitManager::DestroyUnit(DDHandle _UnitHandle)
 	}
 	return false;
 }
+
+//------------------------------------------------------------------------------------------
 
 TWeakObjectPtr<ADDBaseCharacter> UDDUnitManager::GetUnitActor(DDHandle _Handle)
 {
@@ -77,6 +81,8 @@ bool UDDUnitManager::TryPossess(DDHandle _UnitHandle)
 	return true;
 }
 
+//------------------------------------------------------------------------------------------
+
 DDHandle UDDUnitManager::CreateUnit_Internal(const FDDSpawnCommand& _Command)
 {
 	const UBlueprint* pBP = Cast<UBlueprint>(UDDFunctionLibrary::SyncLoadAsset(_Command.BPPath));
@@ -94,7 +100,7 @@ DDHandle UDDUnitManager::CreateUnit_Internal(const FDDSpawnCommand& _Command)
 			SpawnActor = Cast<ADDBaseCharacter>(UDDFunctionLibrary::SpawnActor(
 				pBP->GeneratedClass, pWorld,
 				_Command.Pos, _Command.Rot,
-				TEXT("UnitActor"),
+				TEXT("DDCharacter"),
 				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn));
 		}
 	}

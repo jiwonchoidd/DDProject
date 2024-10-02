@@ -6,11 +6,15 @@
 #include "Camera/CameraComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "UnitComponent/DDInteractionComponent.h"
 
 // Sets default values
 ADDPlayer::ADDPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	InteractionComp = CreateDefaultSubobject<UDDInteractionComponent>(TEXT("Interaction"));
+	InteractionComp->SetupAttachment(RootComponent);
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SA_Cam"));
 	SpringArm->SetupAttachment(RootComponent, NAME_None);

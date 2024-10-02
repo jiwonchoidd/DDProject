@@ -12,7 +12,7 @@ ADDBaseCharacter::ADDBaseCharacter()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 	
-	GetCharacterMovement()->JumpZVelocity = 200.f;
+	GetCharacterMovement()->JumpZVelocity = 250.f;
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;

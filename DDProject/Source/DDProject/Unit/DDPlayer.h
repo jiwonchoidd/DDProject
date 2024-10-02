@@ -13,10 +13,13 @@ protected:
 	virtual void Initialize(DDHandle _Handle) override;
 	virtual void Finalize() override;
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent>		PlayerCamera = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USpringArmComponent>	SpringArm = nullptr;
+	
+	UPROPERTY(BlueprintReadOnly, Category = Interact, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UDDInteractionComponent>	InteractionComp = nullptr;
 public:
 	ADDPlayer();
 };
