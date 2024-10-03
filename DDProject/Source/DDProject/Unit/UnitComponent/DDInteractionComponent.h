@@ -24,10 +24,10 @@ public:
 private:
 	//TArray<FHitResult> TraceSphere(const FVector& _Start, const FVector& _End, float _Radius) const;
 	FHitResult TraceSingleLine(const FVector& _Start, const FVector& _End) const;
-	FHitResult TraceCapsule(const FVector& _Start, const FVector& _End, const class UCapsuleComponent* CapsuleComponent = nullptr) const;
+	FHitResult TraceSphereSingle(const FVector& _Start, const FVector& _End, float _Radius, AActor* _IgnoreActor = nullptr) const;
 
 private:
-	void StartParkour();
+	void StartParkour() const;
 
 private:
 	float JumpHeight = 0.0f;

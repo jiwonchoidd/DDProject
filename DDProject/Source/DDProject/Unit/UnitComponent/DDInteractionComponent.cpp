@@ -70,15 +70,21 @@ FHitResult UDDInteractionComponent::TraceSingleLine(const FVector& _Start, const
 	return HitResult;
 }
 
-FHitResult UDDInteractionComponent::TraceCapsule(const FVector& _Start, const FVector& _End,
-                                                 const class UCapsuleComponent* CapsuleComponent) const
+FHitResult UDDInteractionComponent::TraceSphereSingle(const FVector& _Start, const FVector& _End,
+                                                      float _Radius, AActor* _IgnoreActor) const
 {
+	TArray<AActor*> IgnoreActors;
+	if(_IgnoreActor)
+	{
+		IgnoreActors.Emplace(_IgnoreActor);
+	}
+	
 	FHitResult HitResult;
-	UKismetSystemLibrary::CapsuleTraceSingle(
-		this, _Start, _End, CapsuleComponent->GetScaledCapsuleRadius(), CapsuleComponent->GetScaledCapsuleHalfHeight(),
+	UKismetSystemLibrary::SphereTraceSingle(
+		this, _Start, _End, _Radius,
 		UEngineTypes::ConvertToTraceType(ECC_Visibility),
 		false,
-		TArray<AActor*>(),
+		IgnoreActors,
 		EDrawDebugTrace::ForOneFrame,
 		HitResult,
 		true
@@ -87,7 +93,7 @@ FHitResult UDDInteractionComponent::TraceCapsule(const FVector& _Start, const FV
 	return HitResult;
 }
 
-void UDDInteractionComponent::StartParkour()
+void UDDInteractionComponent::StartParkour() const
 {
 	AActor* Owner = GetOwner();
 	if (!IsValid(Owner))
@@ -97,32 +103,52 @@ void UDDInteractionComponent::StartParkour()
 	if (!IsValid(CapsuleComponent))
 		return;
 
-	FVector ActorLocV = CapsuleComponent->GetComponentLocation();
-	FVector ActorForV = CapsuleComponent->GetForwardVector();
+	constexpr float TraceDistance = 40.0f;
+	constexpr float ParkourMaxDistance = 60.0f;
+	FVector CapsuleLoc = CapsuleComponent->GetComponentLocation();
 
-	constexpr float TraceDistance = 100.0f;
-	FVector End = ActorLocV + (ActorForV * TraceDistance);
+	// 1. 머리 위 오브젝트 검사
+	FVector HeadPos = CapsuleLoc + FVector(0, 0, CapsuleComponent->GetScaledCapsuleHalfHeight());
+	FVector HeadSafety = HeadPos + FVector(0, 0, ParkourMaxDistance); // 슈퍼마리오 X
+	FHitResult UpperTest = TraceSphereSingle(HeadPos, HeadSafety, CapsuleComponent->GetScaledCapsuleRadius());
+	if (UpperTest.bBlockingHit)
+		return;
+	
+	// 2. 앞쪽 오브젝트 검사
+	FVector TraceOffset = CapsuleComponent->GetForwardVector() * TraceDistance;
 
-	// 1. 앞쪽 오브젝트 검사
-	FHitResult WallTest = TraceCapsule(ActorLocV, End, CapsuleComponent);
-	if (!WallTest.bBlockingHit)
+	FVector FrontStart = CapsuleLoc + TraceOffset;
+	FVector FrontEnd = FrontStart + FVector(0, 0, ParkourMaxDistance);;
+	
+	FHitResult WallTest = TraceSphereSingle(FrontStart, FrontEnd, CapsuleComponent->GetScaledCapsuleRadius());
+	AActor* TestedWall = WallTest.GetActor();
+	if (!IsValid(TestedWall))
+		return;
+	
+	// 3. 감지된 오브젝트 위에서 설 수 있는 지 판단
+	FVector WallLoc = WallTest.ImpactPoint + TraceOffset;
+	FVector TopLoc = FVector(WallLoc.X, WallLoc.Y, HeadSafety.Z);
+
+	FHitResult LedgeTest = TraceSingleLine(TopLoc, WallLoc);
+	if (!LedgeTest.bBlockingHit)
 		return;
 
-	AActor* HitActor = WallTest.GetActor();
+	FVector GroundNormal = LedgeTest.Normal;
+	if (FVector::DotProduct(GroundNormal, FVector(0, 0, 1)) < 0.7f)
+	{
+		// 평평하지 않음!
+		return;
+	}
 
-	if (!IsValid(HitActor))
+	// 4. 올라설 오브젝트에 이외 다른 오브젝트가 있는지 탐색
+	FHitResult CanStepOnTest = TraceSphereSingle(LedgeTest.ImpactPoint,
+		LedgeTest.ImpactPoint, CapsuleComponent->GetScaledCapsuleRadius(), TestedWall);
+
+	if (CanStepOnTest.bBlockingHit)
 		return;
 
-	// 2. 가장자리 탐색
-	FVector Origin, Extent;
-	HitActor->GetActorBounds(true, Origin, Extent);
-
-	const FVector TopCenter = Origin + FVector(0, 0, Extent.Z);
-	const FVector NearestLedge = FVector(FMath::Clamp(ActorLocV.X, Origin.X - Extent.X, Origin.X + Extent.X),
-	                                     FMath::Clamp(ActorLocV.Y, Origin.Y - Extent.Y, Origin.Y + Extent.Y),
-	                                     TopCenter.Z);
-
+	
 #if WITH_EDITOR
-	DrawDebugPoint(GetWorld(), NearestLedge, 10.f, FColor::Yellow, false);
+	DrawDebugPoint(GetWorld(), LedgeTest.Location, 24.f, FColor::Blue, false);
 #endif
 }
