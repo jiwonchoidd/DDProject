@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -34,7 +35,8 @@ void UDDInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// 임시 테스트
-	StartParkour();
+	bool test = ClimbWall();
+
 }
 
 /*TArray<FHitResult> UDDInteractionComponent::TraceSphere(const FVector& _Start, const FVector& _End,
@@ -93,6 +95,23 @@ FHitResult UDDInteractionComponent::TraceSphereSingle(const FVector& _Start, con
 	return HitResult;
 }
 
+FHitResult UDDInteractionComponent::TraceCapsuleSingle(const FVector& _Start, const FVector& _End, float _Radius,
+	float _Height) const
+{
+	FHitResult HitResult;
+	UKismetSystemLibrary::CapsuleTraceSingle(
+		this, _Start, _End, _Radius, _Height,
+		UEngineTypes::ConvertToTraceType(ECC_Visibility),
+		false,
+		TArray<AActor*>(),
+		EDrawDebugTrace::ForOneFrame,
+		HitResult,
+		true
+	);
+
+	return HitResult;
+}
+
 void UDDInteractionComponent::StartParkour() const
 {
 	AActor* Owner = GetOwner();
@@ -116,9 +135,8 @@ void UDDInteractionComponent::StartParkour() const
 	
 	// 2. 앞쪽 오브젝트 검사
 	FVector TraceOffset = CapsuleComponent->GetForwardVector() * TraceDistance;
-
 	FVector FrontStart = CapsuleLoc + TraceOffset;
-	FVector FrontEnd = FrontStart + FVector(0, 0, ParkourMaxDistance);;
+	FVector FrontEnd = FrontStart + FVector(0, 0, ParkourMaxDistance);
 	
 	FHitResult WallTest = TraceSphereSingle(FrontStart, FrontEnd, CapsuleComponent->GetScaledCapsuleRadius());
 	AActor* TestedWall = WallTest.GetActor();
@@ -132,23 +150,67 @@ void UDDInteractionComponent::StartParkour() const
 	FHitResult LedgeTest = TraceSingleLine(TopLoc, WallLoc);
 	if (!LedgeTest.bBlockingHit)
 		return;
-
+	
+	// 3-1. 올라설 오브젝트의 기울기 검사
 	FVector GroundNormal = LedgeTest.Normal;
 	if (FVector::DotProduct(GroundNormal, FVector(0, 0, 1)) < 0.7f)
 	{
 		// 평평하지 않음!
+		UE_LOG(LogTemp, Warning, TEXT("GroundNormal is negative"));
 		return;
 	}
 
-	// 4. 올라설 오브젝트에 이외 다른 오브젝트가 있는지 탐색
-	FHitResult CanStepOnTest = TraceSphereSingle(LedgeTest.ImpactPoint,
-		LedgeTest.ImpactPoint, CapsuleComponent->GetScaledCapsuleRadius(), TestedWall);
+	// 3-2. 올라설 오브젝트에 이외 다른 오브젝트가 있는지 탐색
+	FVector StepTestStart = LedgeTest.ImpactPoint + FVector(0, 0, CapsuleComponent->GetScaledCapsuleRadius());
+	FHitResult CanStepOnTest = TraceSphereSingle(StepTestStart, StepTestStart,
+	                                             CapsuleComponent->GetScaledCapsuleRadius(), TestedWall);
 
 	if (CanStepOnTest.bBlockingHit)
 		return;
 
-	
 #if WITH_EDITOR
 	DrawDebugPoint(GetWorld(), LedgeTest.Location, 24.f, FColor::Blue, false);
 #endif
+}
+
+bool UDDInteractionComponent::ClimbWall() const
+{
+	ACharacter* OwnCharacter = Cast<ACharacter>(GetOwner());
+	if (!IsValid(OwnCharacter))
+		return false;
+
+	UCapsuleComponent* CapsuleComponent = OwnCharacter->FindComponentByClass<UCapsuleComponent>();
+	if (!IsValid(CapsuleComponent))
+		return false;
+
+	FVector CapsuleLocV = CapsuleComponent->GetComponentLocation();
+	FVector CapsuleLookV = CapsuleComponent->GetForwardVector();
+	float Radius = CapsuleComponent->GetScaledCapsuleRadius();
+	float HalfHeight = CapsuleComponent->GetScaledCapsuleHalfHeight();
+	
+	// 1. 앞쪽 오브젝트 검사
+	FHitResult Result = TraceCapsuleSingle(CapsuleLocV, CapsuleLocV + CapsuleLookV * 50.f, Radius, HalfHeight);
+	
+	//2. 붙잡을 수 있는지 검사
+	if (!CanBeClimb(Result))
+	{
+#if WITH_EDITOR
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Not Climb");
+#endif
+		UE_LOG(LogTemp, Warning, TEXT("GroundNormal is negative"));
+		return false;
+	}
+	
+	return true;
+}
+
+bool UDDInteractionComponent::CanBeClimb(const FHitResult& _HitResult) const
+{
+	FVector WallNormal = _HitResult.ImpactNormal;
+	if (FMath::Abs(WallNormal.Z) > 0.5f)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GroundNormal is negative"));
+		return false;
+	}
+	return true;
 }

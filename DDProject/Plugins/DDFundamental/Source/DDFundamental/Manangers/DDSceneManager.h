@@ -59,17 +59,16 @@ void UDDSceneManager::ChangeScene(T _SceneState)
 	ChangeSceneStep = EChangeSceneStep::Ready;
 	if (SceneState)
 	{
-		SceneState->SetState(static_cast<uint8>(_SceneState));
+		SceneState->SetState(_SceneState);
 	}
 }
 
 template <typename T, typename>
 void UDDSceneManager::AddScene(T _Enum, TSubclassOf<UDDStateBase> _SceneType)
 {
-	const uint8 Idx = static_cast<uint8>(_Enum);
 	if(SceneState)
 	{
-		SceneState->AddState(Idx, _SceneType, this);
+		SceneState->AddState(_Enum, _SceneType, this);
 	}
 }
 

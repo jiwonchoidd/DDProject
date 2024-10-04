@@ -5,10 +5,12 @@
 
 #include "Camera/CameraComponent.h"
 #include "Components/SphereComponent.h"
+#include "DDFundamental/Struct/DDStateMachine.h"
+#include "DDProject/GamePlay/GameDefine.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "UnitComponent/DDInteractionComponent.h"
+#include "UnitState/PlayerClimbState.h"
 
-// Sets default values
 ADDPlayer::ADDPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -35,9 +37,35 @@ ADDPlayer::ADDPlayer()
 void ADDPlayer::Initialize(DDHandle _Handle)
 {
 	Super::Initialize(_Handle);
+
+	if(State == nullptr)
+	{
+		State = NewObject<UDDStateMachine>(this);
+		State->AddToRoot();
+
+		State->Create();
+		State->AddState(EPlayerState::Default, UPlayerClimbState::StaticClass(), this);
+		State->AddState(EPlayerState::Climb, UPlayerClimbState::StaticClass(), this);
+	}
+}
+
+void ADDPlayer::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if(State)
+	{
+		State->Tick(DeltaSeconds);
+	}
 }
 
 void ADDPlayer::Finalize()
 {
+	if(State)
+	{
+		State->Destroy();
+		State->RemoveFromRoot();
+		State = nullptr;
+	}
 	Super::Finalize();
 }

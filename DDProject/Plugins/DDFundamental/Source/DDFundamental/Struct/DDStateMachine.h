@@ -14,10 +14,12 @@ public:
 	void Create();
 	void Destroy();
 	void Tick(float _fDeltaTime);
-	
-	void AddState(uint8 _uiIndex, TSubclassOf<class UDDStateBase> _SceneType, UObject* _pOuter);
 
-	void SetState(uint8 _uiIndex, bool _bInstant = true);
+	template <typename T, typename = typename TEnableIf<TIsEnum<T>::Value>::Type>
+	void AddState(T _Enum, TSubclassOf<UDDStateBase> _SceneType, UObject* _pOuter = nullptr);
+
+	template <typename T, typename = typename TEnableIf<TIsEnum<T>::Value>::Type>
+	void SetState(T _SceneState);
 
 	FORCEINLINE uint8 GetPreviousStateID() const { return PreviousStateID; }
 	FORCEINLINE uint8 GetCurrentStateID() const { return CurrentStateID; }
@@ -37,3 +39,25 @@ private:
 	UPROPERTY()
 	TMap<uint8, class UDDStateBase*> mapState;
 };
+
+template <typename T, typename>
+void UDDStateMachine::SetState(T _SceneState)
+{
+	uint8 uiIndex = static_cast<uint8>(_SceneState);
+	SetState_Internal(uiIndex);
+}
+
+template <typename T, typename>
+void UDDStateMachine::AddState(T _Enum, TSubclassOf<UDDStateBase> _SceneType, UObject* _pOuter)
+{
+	const uint8 uiIndex = static_cast<uint8>(_Enum);
+	if (mapState.Contains(uiIndex))
+		return;
+
+	UObject* ParentObject = IsValid(_pOuter) ? _pOuter : nullptr;
+	if (UDDStateBase* StateBase = NewObject<UDDStateBase>(ParentObject, _SceneType))
+	{
+		StateBase->Initialize(uiIndex);
+		mapState.Add(uiIndex, StateBase);
+	}
+}
