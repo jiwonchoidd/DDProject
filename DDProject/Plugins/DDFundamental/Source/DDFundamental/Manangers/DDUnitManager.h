@@ -36,6 +36,7 @@ protected:
 public:
 	DDHandle		CreateActor(const FDDSpawnCommand& _SpawnCommand);
 	bool			DestroyUnit(DDHandle _UnitHandle);
+	bool			AllClearUnit();
 	
 	TWeakObjectPtr<class ADDBaseCharacter> GetUnitActor(DDHandle _Handle);
 
