@@ -16,7 +16,7 @@ void UDDUnitManager::Initialize()
 
 void UDDUnitManager::Finalize()
 {
-	int32 Count = AllClearUnit();
+	ClearAllUnit();
 }
 
 void UDDUnitManager::Tick(float _DeltaTime)
@@ -45,7 +45,7 @@ bool UDDUnitManager::DestroyUnit(DDHandle _UnitHandle)
 	return false;
 }
 
-bool UDDUnitManager::AllClearUnit()
+bool UDDUnitManager::ClearAllUnit()
 {
 	int32 Count = 0;
 	for(const auto& Unit : UnitContainer)

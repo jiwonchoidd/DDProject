@@ -2,6 +2,7 @@
 #include "DDSceneBase.h"
 
 #include "DDFundamental/Manangers/DDSceneManager.h"
+#include "DDFundamental/Manangers/DDUnitManager.h"
 
 void UDDSceneBase::Begin()
 {
@@ -39,5 +40,6 @@ bool UDDSceneBase::IsCompleteLoading() const
 
 bool UDDSceneBase::OpenLevel(const FName& _LevelPath) const
 {
+	gUnitMng.ClearAllUnit();
 	return gSceneMng.OpenLevel(_LevelPath);
 }
