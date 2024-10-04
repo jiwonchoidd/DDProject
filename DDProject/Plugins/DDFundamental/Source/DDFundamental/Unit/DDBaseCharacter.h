@@ -22,7 +22,11 @@ public:
 public:
 	FORCEINLINE DDHandle GetHandle() const { return OwnHandle; }
 private:
-	DDHandle OwnHandle = INDEX_NONE; 
+	DDHandle OwnHandle = INDEX_NONE;
+public:
+	virtual void TryMove(const FVector2D& _Input){}
+	virtual void TryLook(const FVector2D& _Input){}
+	virtual void TryJump() {}
 public:
 	ADDBaseCharacter();
 };

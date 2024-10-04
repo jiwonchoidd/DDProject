@@ -69,3 +69,29 @@ void ADDPlayer::Finalize()
 	}
 	Super::Finalize();
 }
+
+void ADDPlayer::TryLook(const FVector2D& _Input)
+{
+	AddControllerYawInput(_Input.X);
+	AddControllerPitchInput(_Input.Y);
+}
+
+void ADDPlayer::TryMove(const FVector2D& _Input)
+{
+	const FRotator Rotation = GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	
+	AddMovementInput(ForwardDirection, _Input.Y);
+	AddMovementInput(RightDirection, _Input.X);
+}
+
+void ADDPlayer::TryJump()
+{
+	if(CanJump())
+	{
+		Jump();
+	}
+}

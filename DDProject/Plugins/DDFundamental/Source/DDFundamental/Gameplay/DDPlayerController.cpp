@@ -93,58 +93,46 @@ void ADDPlayerController::BaseMove(const FInputActionValue& _Value)
 {
 	const FVector2D& MovementVector = _Value.Get<FVector2D>();
 
-	APawn* OwnerPawn = GetPawn();
-	if(!IsValid(OwnerPawn))
+	ADDBaseCharacter* BaseCharacter = Cast<ADDBaseCharacter>(GetPawn());
+	if(!IsValid(BaseCharacter))
 		return;
-	
-	const FRotator Rotation = GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	
-	OwnerPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
-	OwnerPawn->AddMovementInput(RightDirection, MovementVector.X);
+	BaseCharacter->TryMove(MovementVector);
 }
 
 void ADDPlayerController::BaseLook(const FInputActionValue& _Value)
 {
 	const FVector2D& LookAxisVector = _Value.Get<FVector2D>();
 
-	APawn* OwnerPawn = GetPawn();
-	if(!IsValid(OwnerPawn))
+	ADDBaseCharacter* BaseCharacter = Cast<ADDBaseCharacter>(GetPawn());
+	if(!IsValid(BaseCharacter))
 		return;
-	
-	OwnerPawn->AddControllerYawInput(LookAxisVector.X);
-	OwnerPawn->AddControllerPitchInput(LookAxisVector.Y);
+
+	BaseCharacter->TryLook(LookAxisVector);
 }
 
 void ADDPlayerController::BaseJump(const FInputActionValue& _Value)
 {
-	//const bool& Jump = _Value.Get<bool>();
-	ADDBaseCharacter* BaseChar = Cast<ADDBaseCharacter>(GetCharacter());
-	if(!IsValid(BaseChar))
+	ADDBaseCharacter* BaseCharacter = Cast<ADDBaseCharacter>(GetCharacter());
+	if(!IsValid(BaseCharacter))
 		return;
 
-	if(BaseChar->CanJump())
-	{
-		BaseChar->Jump();
-	}
+	BaseCharacter->TryJump();
 }
 
 void ADDPlayerController::BaseAiming(const FInputActionValue& _Value)
 {
-	const ADDBaseCharacter* BaseChar = Cast<ADDBaseCharacter>(GetCharacter());
-	if(!IsValid(BaseChar))
+	const ADDBaseCharacter* BaseCharacter = Cast<ADDBaseCharacter>(GetCharacter());
+	if(!IsValid(BaseCharacter))
 		return;
 	
-	//UnitBase->GetSourceObject()->TryAiming();
+	//BaseCharacter->GetSourceObject()->TryAiming();
 }
 
 void ADDPlayerController::BaseAttack(const FInputActionValue& _Value)
 {
-	const ADDBaseCharacter* BaseChar = Cast<ADDBaseCharacter>(GetCharacter());
-	if(!IsValid(BaseChar))
+	const ADDBaseCharacter* BaseCharacter = Cast<ADDBaseCharacter>(GetCharacter());
+	if(!IsValid(BaseCharacter))
 		return;
 	
 	//UnitBase->TryAttack();

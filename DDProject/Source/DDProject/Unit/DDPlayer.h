@@ -15,6 +15,11 @@ protected:
 	virtual void Initialize(DDHandle _Handle) override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void Finalize() override;
+
+private:
+	virtual void TryLook(const FVector2D& _Input) override;
+	virtual void TryMove(const FVector2D& _Input) override;
+	virtual void TryJump() override;
 private:
 	UPROPERTY(BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent>		PlayerCamera = nullptr;
