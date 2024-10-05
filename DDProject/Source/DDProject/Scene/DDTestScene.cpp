@@ -1,6 +1,7 @@
 #include "DDTestScene.h"
 
-#include "DDFundamental/Manangers/DDSceneManager.h"
+#include "DDFundamental/Gameplay/DDRootInstance.h"
+#include "DDFundamental/Manangers/DDSoundManager.h"
 #include "DDFundamental/Manangers/DDTableManager.h"
 #include "DDFundamental/Manangers/DDUnitManager.h"
 #include "DDProject/GamePlay/GameDefine.h"
@@ -22,6 +23,20 @@ void UDDTestScene::Begin()
 void UDDTestScene::Tick(float _fDeltaTime)
 {
 	Super::Tick(_fDeltaTime);
+
+	if (APlayerController* PlayerController = GDDInstance->GetWorld()->GetFirstPlayerController())
+	{
+		if (PlayerController->IsInputKeyDown(EKeys::P))
+		{
+			gSoundMng.Push(TEXT("/Game/Sound/Test.Test"), 1.0f, 0.f, 4.0f, 4.f);
+		}
+
+		// 예: "Space"키가 눌렸는지 확인
+		if (PlayerController->IsInputKeyDown(EKeys::O))
+		{
+			gSoundMng.Pop();
+		}
+	}
 }
 
 void UDDTestScene::Exit()
@@ -35,7 +50,9 @@ void UDDTestScene::Exit()
 void UDDTestScene::LevelLoadComplete()
 {
 	Super::LevelLoadComplete();
-	
+
+	gSoundMng.Push(TEXT("/Game/Sound/Test.Test"), 1.0f, 0.f, 4.0f, 4.f);
+
 	if(const FBPResource* pResource = gTableMng.GetRowData<FBPResource>(ETableType::BPResource, 1001))
 	{
 		FDDSpawnCommand Command;

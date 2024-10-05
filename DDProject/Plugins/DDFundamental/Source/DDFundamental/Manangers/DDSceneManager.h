@@ -51,6 +51,12 @@ private:
 	
 	FDD_ChangeSceneState OnCompleteChangeScene;
 	EChangeSceneStep ChangeSceneStep = EChangeSceneStep::Ready;
+
+public:
+	FORCEINLINE class UDDSoundManager* GetGetBgmUtil() const { return BgmUtil; }
+private:
+	UPROPERTY()
+	class UDDSoundManager* BgmUtil = nullptr;
 };
 
 template <typename T, typename>

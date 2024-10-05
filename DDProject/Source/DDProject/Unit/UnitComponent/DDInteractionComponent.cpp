@@ -192,25 +192,15 @@ bool UDDInteractionComponent::ClimbWall() const
 	FHitResult Result = TraceCapsuleSingle(CapsuleLocV, CapsuleLocV + CapsuleLookV * 50.f, Radius, HalfHeight);
 	
 	//2. 붙잡을 수 있는지 검사
-	if (!CanBeClimb(Result))
-	{
+	FVector WallNormal = Result.Normal;
 #if WITH_EDITOR
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Not Climb");
+	DrawDebugLine(GetWorld(), Result.Location, Result.Location + WallNormal * 100.f, FColor::Black, false);
 #endif
-		UE_LOG(LogTemp, Warning, TEXT("GroundNormal is negative"));
-		return false;
-	}
-	
-	return true;
-}
-
-bool UDDInteractionComponent::CanBeClimb(const FHitResult& _HitResult) const
-{
-	FVector WallNormal = _HitResult.ImpactNormal;
 	if (FMath::Abs(WallNormal.Z) > 0.5f)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GroundNormal is negative"));
 		return false;
 	}
+	
 	return true;
 }
