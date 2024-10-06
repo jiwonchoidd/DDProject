@@ -8,7 +8,7 @@
 namespace SoundMng
 {
     constexpr float DefaultDelayTime = 0.1f;
-    constexpr float DefaultDelayDivider = 0.3f;
+    constexpr float DefaultDelayCorrection = 1.5f;
 }
 
 FDDBgmStack::FDDBgmStack(const FString& _strSOP, float _Volume, float _StartTime, float _FadeInTime, float _FadeOutTime)
@@ -58,7 +58,7 @@ void UDDSoundManager::Push(const FString& _strSOP, float _Volume, float _StartTi
     if (!BgmStack.IsEmpty())
     {
         const FDDBgmStack& OldBgm = BgmStack.Last();
-        PlayDelayTime = OldBgm.FadeOutTime * SoundMng::DefaultDelayDivider;
+        PlayDelayTime = OldBgm.FadeOutTime * SoundMng::DefaultDelayCorrection;
         Stop(OldBgm);
     }
 
@@ -89,7 +89,7 @@ void UDDSoundManager::Pop()
     if (!BgmStack.IsEmpty())
     {
         const FDDBgmStack& OldBgm = BgmStack.Pop();
-        PlayDelayTime = OldBgm.FadeOutTime * SoundMng::DefaultDelayDivider;
+        PlayDelayTime = OldBgm.FadeOutTime * SoundMng::DefaultDelayCorrection;
         Stop(OldBgm);
     }
 
