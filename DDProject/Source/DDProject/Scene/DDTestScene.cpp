@@ -26,13 +26,12 @@ void UDDTestScene::Tick(float _fDeltaTime)
 
 	if (APlayerController* PlayerController = GDDInstance->GetWorld()->GetFirstPlayerController())
 	{
-		if (PlayerController->IsInputKeyDown(EKeys::P))
+		if (PlayerController->WasInputKeyJustReleased(EKeys::P))
 		{
-			gSoundMng.Push(TEXT("/Game/Sound/Test.Test"), 1.0f, 0.f, 4.0f, 4.f);
+			gSoundMng.Push(TEXT("/Game/Sound/Test.Test"), 1.0f, 0.f, 2.0f, 2.f);
 		}
 
-		// 예: "Space"키가 눌렸는지 확인
-		if (PlayerController->IsInputKeyDown(EKeys::O))
+		if (PlayerController->WasInputKeyJustReleased(EKeys::O))
 		{
 			gSoundMng.Pop();
 		}

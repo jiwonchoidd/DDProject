@@ -11,7 +11,7 @@
 #define	DD_WARNING_CALLINFO(InFormat, ...) UE_LOG(DDWarning, Warning, TEXT("%s %s"), *LOG_CALLINFO, *FString::Printf(InFormat, ##__VA_ARGS__));
 #define	DD_ERROR_CALLINFO(InFormat, ...)   UE_LOG(DDError, Error, TEXT("%s %s"), *LOG_CALLINFO, *FString::Printf(InFormat, ##__VA_ARGS__));
 
-#define	DD_SCREEN(Format, ...)    if(GEngine) {GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT(Format), ##__VA_ARGS__));}
+#define	DD_SCREEN(Format, ...)    if(GEngine) {GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(Format, ##__VA_ARGS__));}
 
 #define DD_CHECK(expr) check(expr);
 #define DD_ENSURE(expr) ensure(expr);

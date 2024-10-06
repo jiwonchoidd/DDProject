@@ -32,6 +32,9 @@ private:
 	virtual void Finalize() override;
 	virtual void Tick(float _DeltaTime) override;
 public:
+	/**
+	 * @brief 브금을 저장해놓습니다. 
+	 */
 	void Push(const FString& _strSOP, float _Volume = 1.0f, float _StartTime = 0.0f, float _FadeInTime = 0.0f, float _FadeOutTime = 0.0f);
 	void Pop();
 	void Clear();
@@ -41,9 +44,10 @@ private:
 	UFUNCTION() void OnAudioFinishedPlaying();
 	
 	TWeakObjectPtr<UAudioComponent> CurPlayingComponent = nullptr;
+	FTimerHandle StartBgmTimerHandle;
 private:
 #if WITH_EDITOR
-	void Print();
+	void Print() const;
 #endif
 private:
 	TArray<FDDBgmStack> BgmStack;
