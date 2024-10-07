@@ -14,7 +14,7 @@ enum class ESceneType : uint8
 };
 
 UENUM()
-enum class EPlayerState : uint8
+enum class EPlayerMove : uint8
 {
 	Default = 0,
 	Climb = 1,

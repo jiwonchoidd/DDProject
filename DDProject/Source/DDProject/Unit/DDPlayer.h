@@ -2,8 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "DDFundamental/Unit/DDBaseCharacter.h"
+#include "DDProject/GamePlay/GameDefine.h"
 #include "DDPlayer.generated.h"
 
+enum class EPlayerMove : uint8;
 class UDDStateMachine;
 
 UCLASS()
@@ -21,15 +23,12 @@ private:
 	virtual void TryMove(const FVector2D& _Input) override;
 	virtual void TryJump() override;
 private:
-	UPROPERTY(BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent>		PlayerCamera = nullptr;
-	UPROPERTY(BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USpringArmComponent>	SpringArm = nullptr;
-	UPROPERTY(BlueprintReadOnly, Category = Interact, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UDDInteractionComponent>	InteractionComp = nullptr;
-
-	UPROPERTY()
-	UDDStateMachine* State = nullptr;
+	UPROPERTY(EditAnywhere, Category = Interact, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UDDInteractionComponent>	Interaction = nullptr;
 public:
 	ADDPlayer();
 };
