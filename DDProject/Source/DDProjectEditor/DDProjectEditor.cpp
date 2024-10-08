@@ -1,15 +1,15 @@
-﻿#include "DDEditorModule.h"
+﻿#include "DDProjectEditor.h"
 
 #include "LevelEditor.h"
 #include "DDFundamental/DDModuleInterface.h"
 
-#define LOCTEXT_NAMESPACE "DD_Editor"
+#define LOCTEXT_NAMESPACE "DDProjectEditor"
 
-TSharedRef<FWorkspaceItem> FDDEditorModule::MenuRoot = FWorkspaceItem::NewGroup(FText::FromString("Menu Root"));
+TSharedRef<FWorkspaceItem> FDDProjectEditor::MenuRoot = FWorkspaceItem::NewGroup(FText::FromString("Menu Root"));
 
-IMPLEMENT_PRIMARY_GAME_MODULE(FDDEditorModule, DDProject, "DDProject");
+IMPLEMENT_PRIMARY_GAME_MODULE(FDDProjectEditor, DDProjectEditor, "DDProjectEditor");
 
-void FDDEditorModule::StartupModule()
+void FDDProjectEditor::StartupModule()
 {
 	DDModuleInterface::StartupModule();
 
@@ -18,36 +18,36 @@ void FDDEditorModule::StartupModule()
 		FLevelEditorModule& levelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
 		ExtensibilityManager = levelEditorModule.GetMenuExtensibilityManager();
 		MenuExtender = MakeShareable(new FExtender);
-		MenuExtender->AddMenuBarExtension(TEXT("Window"), EExtensionHook::After, NULL, FMenuBarExtensionDelegate::CreateRaw(this, &FDDEditorModule::MakePulldownMenu));
+		MenuExtender->AddMenuBarExtension(TEXT("Window"), EExtensionHook::After, NULL, FMenuBarExtensionDelegate::CreateRaw(this, &FDDProjectEditor::MakePulldownMenu));
 		ExtensibilityManager->AddExtender(MenuExtender);
 	}
 	
 	UE_LOG(LogTemp, Warning, TEXT("FDDEditorModule::StartupModule"));
 }
 
-void FDDEditorModule::ShutdownModule()
+void FDDProjectEditor::ShutdownModule()
 {
 	DDModuleInterface::ShutdownModule();
 	
 }
 
-void FDDEditorModule::AddModuleListener()
+void FDDProjectEditor::AddModuleListener()
 {
 	DDModuleInterface::AddModuleListener();
 }
 
-void FDDEditorModule::MakePulldownMenu(FMenuBarBuilder& menuBuilder)
+void FDDProjectEditor::MakePulldownMenu(FMenuBarBuilder& menuBuilder)
 {
 	menuBuilder.AddPullDownMenu(
 		FText::FromString(TEXT("DD Studio")),
 		FText::FromString(TEXT("DD Stuido Editor")),
-		FNewMenuDelegate::CreateRaw(this, &FDDEditorModule::FillPulldownMenu),
+		FNewMenuDelegate::CreateRaw(this, &FDDProjectEditor::FillPulldownMenu),
 		TEXT("DD Studio"),
 		TEXT("DD Studio")
 	);
 }
 
-void FDDEditorModule::FillPulldownMenu(FMenuBuilder& menuBuilder)
+void FDDProjectEditor::FillPulldownMenu(FMenuBuilder& menuBuilder)
 {
 	menuBuilder.BeginSection(TEXT(""), FText::FromName(EditorMenuNames::DD));
 	menuBuilder.AddMenuSeparator(EditorMenuNames::DD);

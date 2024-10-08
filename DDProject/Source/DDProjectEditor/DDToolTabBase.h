@@ -1,10 +1,10 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "DDEditorModule.h"
+#include "DDProjectEditor.h"
 #include "DDFundamental/DDModuleInterface.h"
 
-class DDFUNDAMENTAL_API FDDToolTabBase : public IDDModuleListenerInterface, public TSharedFromThis<FDDToolTabBase>
+class FDDToolTabBase : public IDDModuleListenerInterface, public TSharedFromThis<FDDToolTabBase>
 {
 	virtual ~FDDToolTabBase() override
 	{
@@ -14,7 +14,7 @@ class DDFUNDAMENTAL_API FDDToolTabBase : public IDDModuleListenerInterface, publ
 	{
 		Initialize();
 		FGlobalTabmanager::Get()->RegisterNomadTabSpawner(TabName, FOnSpawnTab::CreateRaw(this, &FDDToolTabBase::SpawnTab))
-			.SetGroup(FDDEditorModule::Get().GetMenuRoot())
+			.SetGroup(FDDProjectEditor::Get().GetMenuRoot())
 			.SetDisplayName(TabDisplayName)
 			.SetTooltipText(ToolTipText)
 			.SetIcon(FSlateIcon(FAppStyle::GetAppStyleSetName(), IconName));

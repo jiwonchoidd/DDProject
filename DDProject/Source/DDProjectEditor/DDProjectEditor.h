@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "DDFundamental/DDModuleInterface.h"
 
-class DDFUNDAMENTAL_API FDDEditorModule : public DDModuleInterface
+class FDDProjectEditor : public DDModuleInterface
 {
 public:
 	virtual void StartupModule() override;
@@ -11,9 +11,9 @@ public:
 
 	TSharedRef<FWorkspaceItem> GetMenuRoot() { return MenuRoot; }
 
-	static FDDEditorModule& Get()
+	static FDDProjectEditor& Get()
 	{
-		return FModuleManager::LoadModuleChecked<FDDEditorModule>("DDEditor");
+		return FModuleManager::LoadModuleChecked<FDDProjectEditor>("DDEditor");
 	}
 
 protected:
