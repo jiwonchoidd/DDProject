@@ -50,24 +50,78 @@ void ADDPlayer::Finalize()
 
 void ADDPlayer::TryLook(const FVector2D& _Input)
 {
-	if(Interaction)
-	{
-		Interaction->Look(_Input);
-	}
+	const float Sensitivity = 0.5f;
+
+	AddControllerYawInput(_Input.X * Sensitivity);
+
+	const float MinPitch = -80.0f;
+	const float MaxPitch = 80.0f;
+	const float NewPitch = FMath::Clamp(_Input.Y * Sensitivity, MinPitch, MaxPitch);
+
+	AddControllerPitchInput(NewPitch);
 }
 
 void ADDPlayer::TryMove(const FVector2D& _Input)
 {
-	if(Interaction)
+	if (GetCharacterMovement()->MovementMode == MOVE_Custom)
 	{
-		Interaction->Move(_Input);
+		FVector MoveDirection = GetActorUpVector() * _Input.Y + GetActorRightVector() * _Input.X;
+
+		if (MoveDirection.IsNearlyZero())
+			return;
+		
+		MoveDirection = MoveDirection.GetSafeNormal();  // 벡터의 크기를 1로 정규화
+		AddMovementInput(MoveDirection, .2f);
+	}
+	else
+	{
+		const FRotator Rotation = GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+		FVector MoveDirection = ForwardDirection * _Input.Y + RightDirection * _Input.X;
+		if (MoveDirection.IsNearlyZero())
+			return;
+		
+		AddMovementInput(MoveDirection, 1.0f);
 	}
 }
 
 void ADDPlayer::TryJump()
 {
-	if(Interaction)
+	UDDMovementComponent* pMovement = Cast<UDDMovementComponent>(GetCharacterMovement());
+	if (!IsValid(pMovement))
+		return;
+
+	FHitResult Temp;
+	bool PrevState = pMovement->MovementMode == MOVE_Custom;
+	bool CurrentState = pMovement->DetectWall(Temp);
+		
+	if (CurrentState)
 	{
-		Interaction->Jump();
+		if (!PrevState)
+		{
+			pMovement->bOrientRotationToMovement = false;
+			pMovement->SetMovementMode(MOVE_Custom);
+		}
+		else
+		{
+			pMovement->bOrientRotationToMovement = true;
+			pMovement->SetMovementMode(MOVE_Walking);
+		}
+	}
+	else
+	{
+		if (PrevState)
+		{
+			pMovement->bOrientRotationToMovement = true;
+			pMovement->SetMovementMode(MOVE_Walking);
+		}
+		else if (CanJump() && !pMovement->IsFalling())
+		{
+			Jump();
+		}
 	}
 }

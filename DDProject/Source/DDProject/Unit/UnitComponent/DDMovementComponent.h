@@ -18,5 +18,5 @@ public:
 private:
 	virtual void PhysCustom(float deltaTime, int32 Iterations) override;
 public:
-	bool DetectWall(FVector& OutWallNormal) const;
+	bool DetectWall(FHitResult& OutWall) const;
 };

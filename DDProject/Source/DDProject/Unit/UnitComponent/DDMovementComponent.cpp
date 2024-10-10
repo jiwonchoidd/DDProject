@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PhysicsVolume.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -16,64 +17,54 @@ UDDMovementComponent::UDDMovementComponent()
 
 void UDDMovementComponent::PhysCustom(float deltaTime, int32 Iterations)
 {
-  if (deltaTime < MIN_TICK_TIME)
+    if (deltaTime < MIN_TICK_TIME)
     {
         return;
     }
 
     RestorePreAdditiveRootMotionVelocity();
 
-    // 커스텀 이동 모드가 벽을 타는 모드인지 확인 (CustomMovementMode == 0)
     if (CustomMovementMode == 0)
     {
-        FVector WallNormal = FVector::ZeroVector;
-
-        if (DetectWall(WallNormal))
+        FHitResult WallResult;
+        if (DetectWall(WallResult))
         {
-            // 벽이 감지되었을 때만 움직임 처리
-            if (!HasAnimRootMotion() && !CurrentRootMotion.HasOverrideVelocity())
+            if( !HasAnimRootMotion() && !CurrentRootMotion.HasOverrideVelocity() )
             {
                 const float Friction = 0.5f * GetPhysicsVolume()->FluidFriction;
-                CalcVelocity(deltaTime, Friction, true, MaxAcceleration);
+                CalcVelocity(deltaTime, Friction, true, BrakingDecelerationWalking);
             }
 
             ApplyRootMotionToVelocity(deltaTime);
 
+            Iterations++;
             bJustTeleported = false;
 
             FVector OldLocation = UpdatedComponent->GetComponentLocation();
             const FVector Adjusted = Velocity * deltaTime;
+
             FHitResult Hit(1.f);
-
-            SafeMoveUpdatedComponent(Adjusted, UpdatedComponent->GetComponentQuat(), true, Hit);
-
-            if (Hit.Time < 1.f)
+            if(!Adjusted.IsNearlyZero())
             {
-                const FVector GravDir = FVector(0.f, 0.f, -1.f);
-                const FVector VelDir = Velocity.GetSafeNormal();
-                const float UpDown = GravDir | VelDir;
+                FVector ProjectedVelocity = FVector::VectorPlaneProject(Velocity, WallResult.Normal);
+                FVector WallOffset = WallResult.Normal * -5.0f;
 
-                bool bSteppedUp = false;
-                if ((FMath::Abs(Hit.ImpactNormal.Z) < 0.2f) && (UpDown < 0.5f) && (UpDown > -0.2f) && CanStepUp(Hit))
-                {
-                    float stepZ = UpdatedComponent->GetComponentLocation().Z;
-                    bSteppedUp = StepUp(GravDir, Adjusted * (1.f - Hit.Time), Hit);
-                    if (bSteppedUp)
-                    {
-                        OldLocation.Z = UpdatedComponent->GetComponentLocation().Z + (OldLocation.Z - stepZ);
-                    }
-                }
+                FVector PlaneVelocity = ProjectedVelocity * deltaTime + WallOffset;
+                FRotator Rot = UKismetMathLibrary::MakeRotFromX(WallResult.Normal * -1.0f);
 
-                if (!bSteppedUp)
-                {
-                    HandleImpact(Hit, deltaTime, Adjusted);
-                    SlideAlongSurface(Adjusted, (1.f - Hit.Time), WallNormal, Hit, true);
-                }
+                SafeMoveUpdatedComponent(PlaneVelocity, Rot, true, Hit);
+            }
+            
+            HandleImpact(Hit, deltaTime, Adjusted);
+            SlideAlongSurface(Adjusted, (1.f - Hit.Time), Hit.Normal, Hit, true);
+            
+            if( !bJustTeleported && !HasAnimRootMotion() && !CurrentRootMotion.HasOverrideVelocity() )
+            {
+                Velocity = (UpdatedComponent->GetComponentLocation() - OldLocation) / deltaTime;
             }
         }
         else
         {
-            // 벽이 없으면 속도를 0으로 설정하여 움직임을 멈추게 함
             Velocity = FVector::ZeroVector;
         }
     }
@@ -83,7 +74,8 @@ void UDDMovementComponent::PhysCustom(float deltaTime, int32 Iterations)
     }
 }
 
-bool UDDMovementComponent::DetectWall(FVector& OutWallNormal) const
+
+bool UDDMovementComponent::DetectWall(FHitResult& OutWall) const
 {
     ACharacter* OwnCharacter = Cast<ACharacter>(GetOwner());
     if (!IsValid(OwnCharacter))
@@ -140,6 +132,6 @@ bool UDDMovementComponent::DetectWall(FVector& OutWallNormal) const
         UE_LOG(LogTemp, Warning, TEXT("Wall Normal is negative"));
         return false;
     }
-    OutWallNormal = WallNormal;
+    OutWall = TempWallHits[0];
     return true;
 }
