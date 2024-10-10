@@ -22,14 +22,4 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-public:
-	void Move(const FVector2D& _Input);
-	void Jump();
-	void Look(const FVector2D& _Input) const;
-private:
-	void ClimbStopJump(class ADDPlayer* Owner);
-	bool bClimbable = false;
-
-private:
-	TStaticArray<FHitResult, 3> WallHits;
 };
