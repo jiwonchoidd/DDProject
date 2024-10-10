@@ -4,17 +4,13 @@
 #include "DDPlayer.h"
 
 #include "Camera/CameraComponent.h"
-#include "Components/SphereComponent.h"
-#include "DDFundamental/Struct/DDStateMachine.h"
-#include "DDProject/GamePlay/GameDefine.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "UnitComponent/DDInteractionComponent.h"
-#include "UnitState/PlayerClimbState.h"
+#include "UnitComponent/DDMovementComponent.h"
 
 // ---------------------------------------------------------------
-
-ADDPlayer::ADDPlayer()
+ADDPlayer::ADDPlayer(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDDMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = true;
 

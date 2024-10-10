@@ -4,7 +4,18 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
-ADDBaseCharacter::ADDBaseCharacter()
+void ADDBaseCharacter::Initialize(DDHandle _Handle)
+{
+	OwnHandle = _Handle; 
+}
+
+void ADDBaseCharacter::Finalize()
+{
+	OwnHandle = INDEX_NONE;
+}
+
+ADDBaseCharacter::ADDBaseCharacter(const FObjectInitializer& ObjectInitializer)
+: Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
@@ -19,14 +30,4 @@ ADDBaseCharacter::ADDBaseCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->bOrientRotationToMovement = true; // 유닛 이동 시 회전
-}
-
-void ADDBaseCharacter::Initialize(DDHandle _Handle)
-{
-	OwnHandle = _Handle; 
-}
-
-void ADDBaseCharacter::Finalize()
-{
-	OwnHandle = INDEX_NONE;
 }

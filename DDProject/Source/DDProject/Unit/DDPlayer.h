@@ -30,5 +30,5 @@ private:
 	UPROPERTY(EditAnywhere, Category = Interact, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UDDInteractionComponent>	Interaction = nullptr;
 public:
-	ADDPlayer();
+	ADDPlayer(const FObjectInitializer& ObjectInitializer);
 };

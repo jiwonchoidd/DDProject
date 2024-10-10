@@ -28,5 +28,5 @@ public:
 	virtual void TryLook(const FVector2D& _Input){}
 	virtual void TryJump() {}
 public:
-	ADDBaseCharacter();
+	ADDBaseCharacter(const FObjectInitializer& ObjectInitializer);
 };

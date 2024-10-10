@@ -22,18 +22,14 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-private:
-	FHitResult TraceSingleLine(const FVector& _Start, const FVector& _End) const;
-	FHitResult TraceSphereSingle(const FVector& _Start, const FVector& _End, float _Radius, AActor* _IgnoreActor = nullptr) const;
-	FHitResult TraceCapsuleSingle(const FVector& _Start, const FVector& _End, float _Radius, float _Height) const;
-
 public:
 	void Move(const FVector2D& _Input);
 	void Jump();
 	void Look(const FVector2D& _Input) const;
 private:
-	bool QueryDetectWall();
 	void ClimbStopJump(class ADDPlayer* Owner);
 	bool bClimbable = false;
+
+private:
 	TStaticArray<FHitResult, 3> WallHits;
 };
