@@ -1,1 +1,5 @@
 ﻿#include "DDFundamentalDefine.h"
+
+DEFINE_LOG_CATEGORY(DDLog);
+DEFINE_LOG_CATEGORY(DDWarning);
+DEFINE_LOG_CATEGORY(DDError);

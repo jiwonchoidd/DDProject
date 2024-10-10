@@ -1,6 +1,10 @@
 ﻿#pragma once
 #include "CoreMinimal.h"
 
+DDFUNDAMENTAL_API DECLARE_LOG_CATEGORY_EXTERN(DDLog, Log, All);
+DDFUNDAMENTAL_API DECLARE_LOG_CATEGORY_EXTERN(DDWarning, Warning, All);
+DDFUNDAMENTAL_API DECLARE_LOG_CATEGORY_EXTERN(DDError, Error, All);
+
 #define LOG_CALLINFO (FString(__FUNCTION__) + TEXT("(") + FString::FromInt(__LINE__) + TEXT(")"))
 
 #define	DD_Log(InFormat, ...)	  UE_LOG(DDLog, Log, InFormat, ##__VA_ARGS__);
