@@ -70,7 +70,7 @@ void ADDPlayer::TryMove(const FVector2D& _Input)
 		if (MoveDirection.IsNearlyZero())
 			return;
 		
-		MoveDirection = MoveDirection.GetSafeNormal();  // 벡터의 크기를 1로 정규화
+		MoveDirection = MoveDirection.GetSafeNormal();
 		AddMovementInput(MoveDirection, .2f);
 	}
 	else
@@ -97,9 +97,7 @@ void ADDPlayer::TryJump()
 
 	FHitResult Temp;
 	bool PrevState = pMovement->MovementMode == MOVE_Custom;
-	bool CurrentState = pMovement->DetectWall(Temp);
-		
-	if (CurrentState)
+	if (pMovement->DetectWall(Temp))
 	{
 		if (!PrevState)
 		{

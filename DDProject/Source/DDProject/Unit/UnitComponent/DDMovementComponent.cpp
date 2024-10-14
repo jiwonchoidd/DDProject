@@ -50,14 +50,18 @@ void UDDMovementComponent::PhysCustom(float deltaTime, int32 Iterations)
                 FVector WallOffset = WallResult.Normal * -5.0f;
 
                 FVector PlaneVelocity = ProjectedVelocity * deltaTime + WallOffset;
-                FRotator Rot = UKismetMathLibrary::MakeRotFromX(WallResult.Normal * -1.0f);
 
-                SafeMoveUpdatedComponent(PlaneVelocity, Rot, true, Hit);
+                // 회전 보간
+                FRotator CurrentRotation = UpdatedComponent->GetComponentRotation();
+                FRotator TargetRotation = UKismetMathLibrary::MakeRotFromX(WallResult.Normal * -1.0f);
+                FRotator InterpolatedRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, deltaTime, 5.0f);
+
+                SafeMoveUpdatedComponent(PlaneVelocity, InterpolatedRotation, true, Hit);
             }
-            
+
             HandleImpact(Hit, deltaTime, Adjusted);
             SlideAlongSurface(Adjusted, (1.f - Hit.Time), Hit.Normal, Hit, true);
-            
+
             if( !bJustTeleported && !HasAnimRootMotion() && !CurrentRootMotion.HasOverrideVelocity() )
             {
                 Velocity = (UpdatedComponent->GetComponentLocation() - OldLocation) / deltaTime;
@@ -73,7 +77,6 @@ void UDDMovementComponent::PhysCustom(float deltaTime, int32 Iterations)
         Super::PhysCustom(deltaTime, Iterations);
     }
 }
-
 
 bool UDDMovementComponent::DetectWall(FHitResult& OutWall) const
 {

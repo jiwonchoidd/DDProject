@@ -54,7 +54,8 @@ public class DDFundamental : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"EnhancedInput"
+				"EnhancedInput",
+				"UMG"
 			}
 		);
 
