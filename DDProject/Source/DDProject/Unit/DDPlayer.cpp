@@ -95,9 +95,8 @@ void ADDPlayer::TryJump()
 	if (!IsValid(pMovement))
 		return;
 
-	FHitResult Temp;
 	bool PrevState = pMovement->MovementMode == MOVE_Custom;
-	if (pMovement->DetectWall(Temp))
+	if (pMovement->QueryDetectWall() > 0x06)
 	{
 		if (!PrevState)
 		{
