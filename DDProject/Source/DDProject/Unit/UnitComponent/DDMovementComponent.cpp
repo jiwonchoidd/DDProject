@@ -46,32 +46,27 @@ void UDDMovementComponent::PhysCustom(float deltaTime, int32 Iterations)
 		{
 			uint8 DetectResult = QueryDetectWall();
 
-			// 벽 탐지 결과로 갈 수 없는 벽 예외처리
-			const bool LDetected = DetectResult & (1 << 1);
-			const bool RDetected = DetectResult & (1 << 2);
-			if( (!LDetected && Adjusted.Y > 0.0f) || (!RDetected && Adjusted.Y < 0.0f))
-			{
-				Adjusted.Y = 0.0f;
-				Velocity.Y = 0.0f;
-			}
-			
 			if(DetectResult > 0)
 			{
-				FVector ProjectedVelocity = FVector::VectorPlaneProject(Velocity, DetectedWallHits[0].Normal);
-				FVector WallOffset = DetectedWallHits[0].Normal * -5.0f;
-
-				FVector PlaneVelocity = ProjectedVelocity * deltaTime + WallOffset;
-				// 회전 보간
-				FRotator CurrentRotation = UpdatedComponent->GetComponentRotation();
+				// 벽 탐지 결과로 갈 수 없는 벽 예외처리
+				const bool LDetected = DetectResult & (1 << 1);
+				const bool RDetected = DetectResult & (1 << 2);
+			
+				FVector RightVector = UpdatedComponent->GetRightVector();
+				float RightDotProduct = FVector::DotProduct(Adjusted, RightVector);
+				if( (!LDetected && RightDotProduct < 0.0f) || (!RDetected && RightDotProduct > 0.0f))
+				{
+					Adjusted -= RightVector * RightDotProduct;
+				}
+				Adjusted = FVector::VectorPlaneProject(Adjusted, DetectedWallHits[0].Normal);
+				
 				FRotator TargetRotation = UKismetMathLibrary::MakeRotFromX(DetectedWallHits[0].Normal * -1.0f);
-				FRotator InterpolatedRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, deltaTime, 5.0f);
-				SafeMoveUpdatedComponent(PlaneVelocity, InterpolatedRotation, true, Hit);
+				FRotator InterpolatedRotation = FMath::RInterpTo(UpdatedComponent->GetComponentRotation(), TargetRotation, deltaTime, 15.0f);
+				SafeMoveUpdatedComponent(Adjusted, InterpolatedRotation, true, Hit);
 			}
 		}
-
-		HandleImpact(Hit, deltaTime, Adjusted);
-		SlideAlongSurface(Adjusted, (1.f - Hit.Time), Hit.Normal, Hit, true);
-
+		
+		
 		if (!bJustTeleported && !HasAnimRootMotion() && !CurrentRootMotion.HasOverrideVelocity())
 		{
 			Velocity = (UpdatedComponent->GetComponentLocation() - OldLocation) / deltaTime;

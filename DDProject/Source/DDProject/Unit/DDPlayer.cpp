@@ -71,7 +71,7 @@ void ADDPlayer::TryMove(const FVector2D& _Input)
 			return;
 		
 		MoveDirection = MoveDirection.GetSafeNormal();
-		AddMovementInput(MoveDirection, .2f);
+		AddMovementInput(MoveDirection, 0.25f);
 	}
 	else
 	{
