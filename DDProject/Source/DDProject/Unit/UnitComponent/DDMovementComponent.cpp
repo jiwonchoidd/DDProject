@@ -49,9 +49,10 @@ void UDDMovementComponent::PhysCustom(float deltaTime, int32 Iterations)
 			// 벽 탐지 결과로 갈 수 없는 벽 예외처리
 			const bool LDetected = DetectResult & (1 << 1);
 			const bool RDetected = DetectResult & (1 << 2);
-			if( (!LDetected && Velocity.Y > 0.0f) || (!RDetected && Velocity.Y < 0.0f))
+			if( (!LDetected && Adjusted.Y > 0.0f) || (!RDetected && Adjusted.Y < 0.0f))
 			{
 				Adjusted.Y = 0.0f;
+				Velocity.Y = 0.0f;
 			}
 			
 			if(DetectResult > 0)
