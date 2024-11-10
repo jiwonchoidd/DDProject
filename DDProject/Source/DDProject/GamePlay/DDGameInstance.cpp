@@ -5,6 +5,7 @@
 #include "DDFundamental/Manangers/DDSoundManager.h"
 #include "DDFundamental/Manangers/DDTableManager.h"
 #include "DDFundamental/Manangers/DDUnitManager.h"
+#include "DDFundamental/Manangers/DDWidgetManager.h"
 #include "DDProject/Manager/DDNetworkManager.h"
 #include "DDProject/Scene/DDLobbyScene.h"
 #include "DDProject/Scene/DDTestScene.h"
@@ -27,10 +28,12 @@ void UDDGameInstance::InitSingletons()
 	Singletons.Emplace(UDDTableManager::MakeInstance());
 	Singletons.Emplace(UDDSceneManager::MakeInstance());
 	Singletons.Emplace(UDDSoundManager::MakeInstance());
+	Singletons.Emplace(UDDWidgetManager::MakeInstance());
 }
 
 void UDDGameInstance::ShutdownSingletons()
 {
+	UDDWidgetManager::RemoveInstance();
 	UDDSoundManager::RemoveInstance();
 	UDDSceneManager::RemoveInstance();
 	UDDTableManager::RemoveInstance();
