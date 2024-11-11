@@ -39,7 +39,7 @@ void UDDFunctionLibrary::SyncLoadAsset(const TArray<FSoftObjectPath>& _SofList)
 
 UObject* UDDFunctionLibrary::SyncLoadAsset(const FSoftObjectPath& _AssetPath)
 {
-	const TSoftObjectPtr LoadPtr = TSoftObjectPtr(_AssetPath);
+	TSoftObjectPtr<UObject> LoadPtr = TSoftObjectPtr<UObject>(_AssetPath); 
 	return LoadPtr.LoadSynchronous();
 }
 

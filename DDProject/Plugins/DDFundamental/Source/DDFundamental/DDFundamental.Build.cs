@@ -46,7 +46,6 @@ public class DDFundamental : ModuleRules
 			}
 		);
 
-
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{

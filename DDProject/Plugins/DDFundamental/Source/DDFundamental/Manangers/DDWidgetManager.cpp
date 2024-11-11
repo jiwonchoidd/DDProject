@@ -36,7 +36,7 @@ UUserWidget* UDDWidgetManager::AddWidget_Internal(const FString& _Path, int32 _Z
 	if (World != nullptr && World->bIsTearingDown == false)
 	{
 		UClass* WidgetClass = pWidgetBP->GeneratedClass;
-		if (UUserWidget* Widget = CreateWidget<UUserWidget>(World, WidgetClass))
+		if (UUserWidget* Widget = CreateWidget(World, WidgetClass))
 		{
 			Widget->AddToViewport(_ZOrder);
 			Widgets.Emplace(Widget->GetName(), Widget);

@@ -23,7 +23,8 @@ protected:
 	virtual void Finalize() override;
 	virtual void Tick(float _DeltaTime) override;
 public:
-	template<typename T> T* AddWidget(const FString& _Path, int32 _ZOrder = 0)
+	template <typename T = UUserWidget, typename OwnerType = UObject>
+	T* AddWidget(const FString& _Path, int32 _ZOrder = 0)
 	{
 		return Cast<T>(AddWidget_Internal(_Path, _ZOrder));
 	}
