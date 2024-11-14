@@ -19,7 +19,7 @@ public:
 	static UObject* SyncLoadAsset(const FSoftObjectPath& _AssetPath);
 	static AActor*	SpawnActor(UClass* _Class, UWorld* _World, const FVector& _Loc, const FRotator& _Rot, const FString& _Label,
 	                          ESpawnActorCollisionHandlingMethod _Method = ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-
+	
 	/*template <typename T>
 	static T* GetProperty(UClass* _Class, UObject* ContainerObject)
 	{

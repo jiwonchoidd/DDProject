@@ -25,7 +25,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+public:
+	bool SpawnUnit() const;
 private:
 	UPROPERTY()
 	class UBillboardComponent* SpriteComponent = nullptr;

@@ -5,7 +5,14 @@
 
 #include "Components/ArrowComponent.h"
 #include "Components/BillboardComponent.h"
+#include "DDFundamental/Manangers/DDTableManager.h"
+#include "DDFundamental/Manangers/DDUnitManager.h"
+#include "DDFundamental/Unit/DDBaseCharacter.h"
+#include "DDProject/GamePlay/GameDefine.h"
+#include "DDProject/Table/RowHeader/BPResource.h"
 
+
+struct FBPResource;
 
 ADDSpawnPoint::ADDSpawnPoint()
 {
@@ -58,22 +65,28 @@ ADDSpawnPoint::ADDSpawnPoint()
 void ADDSpawnPoint::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
-	/*if(SpawnOption.UnitTableId == 0)
-		return;
-
-	if(const FUnitResource* UnitResource = gTableMng.GetRowData<FUnitResource>(ETableType::UnitResource, SpawnOption.UnitTableId))
+bool ADDSpawnPoint::SpawnUnit() const
+{
+	if(SpawnOption.UnitTableId == 0)
+		return false;
+	
+	if(const FBPResource* pResource = gTableMng.GetRowData<FBPResource>(ETableType::BPResource, SpawnOption.UnitTableId))
 	{
-		FDDSpawnCommand SC;
-		SC.Pos = GetActorLocation();
-		SC.Rot = GetActorRotation();
-		SC.AssetPath = TEXT("/Script/Engine.Blueprint'/Game/Unit/BP_CharBase.BP_CharBase'");
+		FDDSpawnCommand Command;
+		Command.Pos = GetActorLocation();
+		Command.Rot = GetActorRotation();
+		Command.BPPath = pResource->Blueprint.ToSoftObjectPath();
+		
+		DDHandle SpawnIndex = gUnitMng.CreateActor(Command);
 
-		if(const UDDUnitBase* UnitBase = gUnitMng.CreateActor(UDDNpcUnit::StaticClass(), SC))
-		{
+		TWeakObjectPtr<ADDBaseCharacter> Actor = gUnitMng.GetUnitActor(SpawnIndex);
 #if WITH_EDITOR
-			UE_LOG(LogTemp, Log, TEXT("Spawn Point : %d"), UnitBase->GetUnitHandle());
+		UE_LOG(LogTemp, Log, TEXT("Spawn Point : %d"), SpawnIndex);
 #endif
-		}
-	}*/
+
+		return true;
+	}
+	return false;
 }

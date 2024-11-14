@@ -1,5 +1,6 @@
 #include "DDTestScene.h"
 
+#include "EngineUtils.h"
 #include "DDFundamental/Gameplay/DDRootInstance.h"
 #include "DDFundamental/Manangers/DDSoundManager.h"
 #include "DDFundamental/Manangers/DDTableManager.h"
@@ -8,6 +9,8 @@
 #include "DDProject/GamePlay/GameDefine.h"
 #include "DDProject/Table/RowHeader/BPResource.h"
 #include "Blueprint/UserWidget.h"
+#include "DDFundamental/Gameplay/DDFunctionLibrary.h"
+#include "DDProject/Unit/DDSpawnPoint.h"
 
 void UDDTestScene::Begin()
 {
@@ -54,6 +57,15 @@ void UDDTestScene::LevelLoadComplete()
 	Super::LevelLoadComplete();
 
 	gSoundMng.Push(TEXT("/Game/Sound/Test.Test"), 1.0f, 0.f, 4.0f, 4.f);
+
+	TArray<ADDSpawnPoint*> SpawnPoint; 
+	if (UWorld* pWorld = GDDInstance->GetWorld())
+	{
+		for (TActorIterator<ADDSpawnPoint> It(pWorld); It; ++It)
+		{
+			bool bSpawn = (*It)->SpawnUnit();
+		}
+	}
 
 	if(const FBPResource* pResource = gTableMng.GetRowData<FBPResource>(ETableType::BPResource, 1001))
 	{
