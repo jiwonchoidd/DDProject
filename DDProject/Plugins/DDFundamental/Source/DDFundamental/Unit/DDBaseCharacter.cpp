@@ -30,4 +30,5 @@ ADDBaseCharacter::ADDBaseCharacter(const FObjectInitializer& ObjectInitializer)
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->bOrientRotationToMovement = true; // 유닛 이동 시 회전
+	GetCharacterMovement()->bRunPhysicsWithNoController = true; // 컨트롤러가 없어도 중력 적용
 }
