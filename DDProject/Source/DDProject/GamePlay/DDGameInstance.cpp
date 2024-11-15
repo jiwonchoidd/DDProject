@@ -6,7 +6,6 @@
 #include "DDFundamental/Manangers/DDTableManager.h"
 #include "DDFundamental/Manangers/DDUnitManager.h"
 #include "DDFundamental/Manangers/DDWidgetManager.h"
-#include "DDProject/Manager/DDNetworkManager.h"
 #include "DDProject/Scene/DDLobbyScene.h"
 #include "DDProject/Scene/DDTestScene.h"
 
@@ -23,7 +22,6 @@ void UDDGameInstance::InitSingletons()
 {
 	Super::InitSingletons();
 	
-	Singletons.Emplace(UDDNetworkManager::MakeInstance());
 	Singletons.Emplace(UDDUnitManager::MakeInstance());
 	Singletons.Emplace(UDDTableManager::MakeInstance());
 	Singletons.Emplace(UDDSceneManager::MakeInstance());
@@ -38,7 +36,6 @@ void UDDGameInstance::ShutdownSingletons()
 	UDDSceneManager::RemoveInstance();
 	UDDTableManager::RemoveInstance();
 	UDDUnitManager::RemoveInstance();
-	UDDNetworkManager::RemoveInstance();
 	
 	Super::ShutdownSingletons();
 }
